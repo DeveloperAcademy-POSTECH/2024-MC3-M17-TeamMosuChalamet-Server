@@ -12,6 +12,7 @@ import java.time.LocalDateTime
 @EntityListeners(AuditingEntityListener::class)
 @MappedSuperclass
 abstract class BaseEntity {
+
     @CreatedDate
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     @Column(updatable = false)
@@ -20,6 +21,5 @@ abstract class BaseEntity {
     @LastModifiedDate
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     var modifiedTime: LocalDateTime? = null
-
     var deleted: Boolean = false
 }

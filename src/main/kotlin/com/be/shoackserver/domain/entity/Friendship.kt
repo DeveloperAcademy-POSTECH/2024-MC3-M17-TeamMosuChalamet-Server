@@ -25,5 +25,4 @@ class Friendship : BaseEntity() {
     enum class FriendshipStatus {
         Pending, ACCEPTED, REJECTED
     }
-
 }
