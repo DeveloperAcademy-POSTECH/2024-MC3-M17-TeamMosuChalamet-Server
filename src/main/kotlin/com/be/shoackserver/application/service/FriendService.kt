@@ -3,6 +3,7 @@ package com.be.shoackserver.application.service
 import com.be.shoackserver.application.dto.MemberDto
 import com.be.shoackserver.application.exception.MemberNotFoundException
 import com.be.shoackserver.domain.entity.Friendship
+import com.be.shoackserver.domain.entity.Member
 import com.be.shoackserver.domain.repository.FriendshipRepository
 import com.be.shoackserver.domain.repository.MemberRepository
 import org.springframework.stereotype.Service
@@ -25,7 +26,7 @@ class FriendService (
         }
 
 
-    fun getFriendList(): List<MemberDto> {
+    fun getFriendList(): List<Member> {
 
         val selfMember = memberRepository.findById(memberId)
             .orElseThrow() {MemberNotFoundException(memberId)}
@@ -40,7 +41,7 @@ class FriendService (
             .filter { it.status == Friendship.FriendshipStatus.ACCEPTED }
             .mapNotNull { it.subjectMember }
 
-        return (friendListAsSubject + friendListAsObject).map { MemberDto.of(it) }
+        return friendListAsSubject + friendListAsObject
 
     }
 
