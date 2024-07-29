@@ -14,4 +14,5 @@ class Member : BaseEntity() {
     var appleUserId: String? = null
     var name: String? = null
     var imageName: String? = null
+    var deviceToken: String? = null
 }
