@@ -1,11 +1,7 @@
 package com.be.shoackserver.domain.entity
 
 import com.be.shoackserver.domain.entity.common.BaseEntity
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity
 class Member : BaseEntity() {
@@ -18,4 +14,5 @@ class Member : BaseEntity() {
     var appleUserId: String? = null
     var name: String? = null
     var imageName: String? = null
+    var deviceToken: String? = null
 }
