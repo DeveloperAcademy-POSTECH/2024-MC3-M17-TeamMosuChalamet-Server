@@ -35,7 +35,7 @@ class MessageService(
             addProperty("senderImageURL", senderInfo.senderImageURL)
         }
 
-        payloadBuilder.addCustomProperty("senderInfo", senderInfo)
+        payloadBuilder.addCustomProperty("senderInfo", senderInfoJson)
 
         val payload = payloadBuilder.build()
         val token = TokenUtil.sanitizeTokenString(senderInfo.senderDeviceToken) // senderInfo.deviceToken 사용해야 함
@@ -47,41 +47,44 @@ class MessageService(
         val sendNotificationFuture: PushNotificationFuture<SimpleApnsPushNotification, PushNotificationResponse<SimpleApnsPushNotification>> =
             apnsClient.sendNotification(pushNotification)
 
-        try {
-            val response =
-                sendNotificationFuture.get()
-
-            if (response.isAccepted) {
-                println("Push notification is accepted")
-                println("Message : " + response.pushNotification.payload)
-            } else {
-                println(
-                    "Notification is rejected : " +
-                            response.rejectionReason
-                )
-            }
-        } catch (e: ExecutionException) {
-            System.err.println("Failed to send push notification.")
-            e.printStackTrace()
-        }
-//        비동기 처리
-//        sendNotificationFuture.whenComplete {response, throwable ->
-//            if (throwable != null) {
-//                System.err.println("Failed to send push notification.")
-//                throwable.printStackTrace()
+//        try {
+//            val response =
+//                sendNotificationFuture.get()
+//
+//            if (response.isAccepted) {
+//                println("Push notification is accepted")
+//                println("Message : " + response.pushNotification.payload)
+//            } else {
+//                println(
+//                    "Notification is rejected : " +
+//                            response.rejectionReason
+//                )
 //            }
-//            else {
-//                if (response.isAccepted) {
-//                    println("Push notification accepted by APNs gateway.")
-//                    println("Message : ${response.pushNotification.payload}")
-//                } else {
-//                    println(
-//                        "Notification is rejected : " +
-//                                response.rejectionReason
-//                    )
-//                }
-//            }
+//        } catch (e: ExecutionException) {
+//            System.err.println("Failed to send push notification.")
+//            e.printStackTrace()
 //        }
+
+//        비동기 처리
+        sendNotificationFuture.whenComplete {response, throwable ->
+            if (throwable != null) {
+                System.err.println("Failed to send push notification.")
+                throwable.printStackTrace()
+            }
+            else {
+                if (response.isAccepted) {
+                    println(response.pushNotification)
+                    println("Push notification accepted by APNs gateway.")
+                    println("Message : ${response.pushNotification.payload}")
+                } else {
+                    println(response.pushNotification)
+                    println(
+                        "Notification is rejected : " +
+                                response.rejectionReason
+                    )
+                }
+            }
+        }
 
     }
 }
