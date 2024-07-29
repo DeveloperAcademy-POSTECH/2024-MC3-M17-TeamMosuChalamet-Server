@@ -9,6 +9,7 @@ class MemberDto {
     var appleUserId: String? = null
     var name: String? = null
     var imageName: String? = null
+    var deviceToken: String? = null
 
     companion object {
         fun of (member : Member) : MemberDto {
@@ -17,6 +18,7 @@ class MemberDto {
             memberDto.appleUserId = member.appleUserId
             memberDto.name = member.name
             memberDto.imageName = member.imageName
+            memberDto.deviceToken = member.deviceToken
             return memberDto
         }
     }

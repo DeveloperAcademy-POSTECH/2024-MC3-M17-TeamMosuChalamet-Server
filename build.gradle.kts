@@ -37,6 +37,9 @@ dependencies {
     implementation ("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
     implementation ("javax.xml.bind:jaxb-api:2.3.1")
     implementation ("org.springframework.boot:spring-boot-starter-log4j2")
+    implementation("com.eatthepath:pushy:0.15.4")
+    implementation("com.google.code.gson:gson:2.10.1")
+
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.h2database:h2")
