@@ -38,8 +38,8 @@ class MessageService(
         payloadBuilder.addCustomProperty("senderInfo", senderInfo)
 
         val payload = payloadBuilder.build()
-        val token = TokenUtil.sanitizeTokenString("apns_device_token") // senderInfo.deviceToken 사용해야 함
-        val pushNotification = SimpleApnsPushNotification(token, "my_App_bundle_id", payload)
+        val token = TokenUtil.sanitizeTokenString(senderInfo.senderDeviceToken) // senderInfo.deviceToken 사용해야 함
+        val pushNotification = SimpleApnsPushNotification(token, "ADA.mosuchalamet.Shoak", payload)
 
         /*
         * PushNotificationFuture: PushNotificationResponse<SimpleApnsPushNotification>를 반환하는 CompletableFuture를 구현한 인터페이스

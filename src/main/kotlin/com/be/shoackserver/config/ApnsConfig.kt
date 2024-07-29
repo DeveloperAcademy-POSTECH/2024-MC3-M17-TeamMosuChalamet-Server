@@ -22,8 +22,8 @@ class ApnsConfig {
             * keyId: developer 계정의 Key ID
             * */
             .setSigningKey(ApnsSigningKey.loadFromPkcs8File(
-                File("/path/to/key.p8"),
-                "TEAMID1234", "KEYID67890"))
+                File("/Users/vinci/IdeaProjects/MC3/Shoack-Server/src/main/resources/AuthKey_DXK7GC475X.p8"),
+                "R62RZ89ZRU", "DXK7GC475X"))
             .build();
     }
 }
