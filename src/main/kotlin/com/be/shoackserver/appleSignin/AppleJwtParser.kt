@@ -31,11 +31,12 @@ class AppleJwtParser {
 
     fun parsePublicKeyAndGetClaims(identityToken: String, publicKey: PublicKey) : Claims {
         return try {
-            Jwts.parserBuilder()
-                .setSigningKey(publicKey) // 새로 생성한 public key를 검증할 공개키로 설정
+            Jwts.parser()
+                .verifyWith(publicKey)
                 .build()
-                .parseClaimsJws(identityToken) // identity token을 파싱
-                .body // 클레임을 추출
+                .parseSignedClaims(identityToken)
+                .payload
+
         } catch (e: SignatureException) {
             throw SecurityException("Invalid token signature", e)
         } catch (e: ExpiredJwtException){

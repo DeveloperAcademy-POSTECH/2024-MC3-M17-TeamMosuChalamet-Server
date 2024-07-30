@@ -29,9 +29,9 @@ class PublicKeyGenerator {
         var publicKeySpec = RSAPublicKeySpec(n, e)
 
         try {
-            var keyFactory = KeyFactory.getInstance(applePublicKey.kty) // 애플 public key의 kty로 KeyFactory 생성
+            var keyFactory = KeyFactory.getInstance(applePublicKey.kty) // 애플 public key의 kty(키 타입)로 KeyFactory 생성
 
-            return keyFactory.generatePublic(publicKeySpec) // KeyFactory를 사용하여 public key 사양으로 새로운 PublicKey 생성
+            return keyFactory.generatePublic(publicKeySpec) // KeyFactory를 사용하여 public key 스펙으로 새로운 PublicKey 생성
         } catch (e : Exception) {
             when (e) {
                 is NoSuchAlgorithmException -> {

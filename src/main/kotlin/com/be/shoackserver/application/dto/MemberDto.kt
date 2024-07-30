@@ -10,6 +10,7 @@ class MemberDto {
     var name: String? = null
     var imageName: String? = null
     var deviceToken: String? = null
+    var role: String? = null
 
     companion object {
         fun of (member : Member) : MemberDto {
@@ -19,6 +20,7 @@ class MemberDto {
             memberDto.name = member.name
             memberDto.imageName = member.imageName
             memberDto.deviceToken = member.deviceToken
+            memberDto.role = member.role
             return memberDto
         }
     }

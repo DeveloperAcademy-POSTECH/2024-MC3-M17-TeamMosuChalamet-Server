@@ -34,6 +34,11 @@
             <AppenderRef ref="RollingFileAppender" />
         </logger>
 
+        <logger name ="org.springframework.security" level="DEBUG" additivity="false">
+            <AppenderRef ref="ConsoleAppender" />
+            <AppenderRef ref="RollingFileAppender" />
+        </logger>
+
         <!--         Root Logger-->
         <Root level="INFO">
             <AppenderRef ref="ConsoleAppender" />

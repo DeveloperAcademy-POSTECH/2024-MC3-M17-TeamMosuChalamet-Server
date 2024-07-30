@@ -15,4 +15,5 @@ class Member : BaseEntity() {
     var name: String? = null
     var imageName: String? = null
     var deviceToken: String? = null // APNs 푸시 알림을 위한 디바이스 토큰
+    var role: String? = null
 }
