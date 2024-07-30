@@ -12,6 +12,7 @@ import com.eatthepath.pushy.apns.util.concurrent.PushNotificationFuture
 import com.fasterxml.jackson.databind.util.JSONPObject
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 import java.util.concurrent.ExecutionException
@@ -19,27 +20,29 @@ import java.util.concurrent.ExecutionException
 
 @Service
 class MessageService(
-    private val apnsClient: ApnsClient
+    private val apnsClient: ApnsClient,
+    @Value("\${oauth.apple.client-id}") private val topic: String
 ) {
-    fun sendPushNotification(senderInfo: MessageUseCase.SenderInfo) {
-
+    fun sendPushNotification(
+        memberDto: MemberDto,
+    ) {
         // SimpleApnsPayloadBuilder를 사용하여 Gson or Jackson 기반으로 payload 생성
         val payloadBuilder: ApnsPayloadBuilder = SimpleApnsPayloadBuilder()
-        payloadBuilder.setAlertTitle("Test Title")
-        payloadBuilder.setAlertBody("Test Body: Notification")
+        payloadBuilder.setAlertTitle(memberDto.name) // 송신자의 이름
+        payloadBuilder.setAlertBody("쇽! 날 봐줘!") // 메시지 내용
 
-        // 송신자 정보 추가
-        val senderInfoJson : JsonObject = JsonObject().apply {
-            addProperty("senderId", senderInfo.senderId)
-            addProperty("senderName", senderInfo.senderName)
-            addProperty("senderImageURL", senderInfo.senderImageURL)
-        }
-
-        payloadBuilder.addCustomProperty("senderInfo", senderInfoJson)
+//        // 송신자 정보 추가
+//        val senderInfoJson : JsonObject = JsonObject().apply {
+//            addProperty("senderId", senderInfo.senderId)
+//            addProperty("senderName", senderInfo.senderName)
+//            addProperty("senderImageURL", senderInfo.senderImageURL)
+//        }
+//
+//        payloadBuilder.addCustomProperty("senderInfo", senderInfoJson)
 
         val payload = payloadBuilder.build()
-        val token = TokenUtil.sanitizeTokenString(senderInfo.senderDeviceToken) // senderInfo.deviceToken 사용해야 함
-        val pushNotification = SimpleApnsPushNotification(token, "ADA.mosuchalamet.Shoak", payload)
+        val token = TokenUtil.sanitizeTokenString(memberDto.deviceToken)
+        val pushNotification = SimpleApnsPushNotification(token, topic, payload)
 
         /*
         * PushNotificationFuture: PushNotificationResponse<SimpleApnsPushNotification>를 반환하는 CompletableFuture를 구현한 인터페이스

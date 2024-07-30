@@ -28,6 +28,13 @@ repositories {
     mavenCentral()
 }
 
+//sourceSets {
+//    main {
+//        java.srcDirs("src/main/java")
+//        kotlin.srcDirs("src/main/kotlin")
+//    }
+//}
+
 extra["springCloudVersion"] = "2023.0.3"
 
 
@@ -50,7 +57,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
 
     compileOnly("org.projectlombok:lombok")
-    developmentOnly("org.springfamework.boot:spring-boot-devtools")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.6.3")
     runtimeOnly("com.h2database:h2")
     runtimeOnly ("com.mysql:mysql-connector-j")
