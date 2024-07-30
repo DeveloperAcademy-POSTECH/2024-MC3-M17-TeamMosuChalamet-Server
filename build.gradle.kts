@@ -47,6 +47,9 @@ dependencies {
     implementation ("io.jsonwebtoken:jjwt-impl:0.11.5")
     implementation ("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
+    implementation("com.eatthepath:pushy:0.15.4")
+    implementation("com.google.code.gson:gson:2.10.1")
+
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springfamework.boot:spring-boot-devtools")
     runtimeOnly("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.6.3")

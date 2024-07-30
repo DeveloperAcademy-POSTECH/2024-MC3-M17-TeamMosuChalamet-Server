@@ -18,10 +18,21 @@ class MemberService (
             .orElseThrow() { MemberNotFoundException(memberId) }
     }
 
+    fun findMemberById(memberId: Long) : Member {
+        return memberRepository.findById(memberId)
+            .orElseThrow() { MemberNotFoundException(memberId) }
+    }
+
     @Transactional
     fun updateMemberProfileImageName(imageName: String) {
         val member = memberRepository.findById(memberId)
             .orElseThrow() {MemberNotFoundException(memberId)}
         member.imageName = imageName
+    }
+
+    fun findDeviceTokenByMemberId(memberId: Long) : String {
+        return memberRepository.findById(memberId)
+            .orElseThrow() { MemberNotFoundException(memberId) }
+            .deviceToken ?: throw IllegalArgumentException("Device token is null")
     }
 }
