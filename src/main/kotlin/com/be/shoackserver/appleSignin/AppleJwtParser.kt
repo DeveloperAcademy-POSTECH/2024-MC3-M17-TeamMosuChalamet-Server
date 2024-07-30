@@ -6,43 +6,43 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import org.bouncycastle.pqc.crypto.ExchangePair
+import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import java.security.PublicKey
 import java.security.SignatureException
 import java.util.*
 
+@Component
 class AppleJwtParser {
 
     companion object {
-        private var IDENTITY_TOKEN_VALUE_DELIMITER : String = "\\."
-        private var IDENTITY_TOKEN_HEADER_INDEX = 0
+        private var objectMapper = jacksonObjectMapper()
 
-        private var OBJECT_MAPPER = jacksonObjectMapper()
+    }
+    fun parseHeaders(identityToken: String) : Map<String, String>  {
+        try {
+            val encodedHeader = identityToken.split(".")[0] // . 으로 헤더, 페이로드, 시그니처 분리하고 헤더만 뽑아오기
+            val decodedHeader = String(Base64.getUrlDecoder().decode(encodedHeader)) // 헤더를 base64 디코딩하기
+            return objectMapper.readValue(decodedHeader)
+        } catch (e: Exception) {
+            throw RuntimeException("Failed to parse headers from identity token")
+        }
+    }
 
-        fun parseHeaders(identityToken: String) : Map<String, String>  {
-            try {
-                val encodedHeader = identityToken.split(IDENTITY_TOKEN_VALUE_DELIMITER)[IDENTITY_TOKEN_HEADER_INDEX]
-                val decodedHeader = String(Base64.getUrlDecoder().decode(encodedHeader))
-                return OBJECT_MAPPER.readValue(decodedHeader)
-            } catch (e: Exception) {
-                throw RuntimeException("Failed to parse headers from identity token")
-            }
+    fun parsePublicKeyAndGetClaims(identityToken: String, publicKey: PublicKey) : Claims {
+        return try {
+            Jwts.parserBuilder()
+                .setSigningKey(publicKey) // 새로 생성한 public key를 검증할 공개키로 설정
+                .build()
+                .parseClaimsJws(identityToken) // identity token을 파싱
+                .body // 클레임을 추출
+        } catch (e: SignatureException) {
+            throw SecurityException("Invalid token signature", e)
+        } catch (e: ExpiredJwtException){
+            throw SecurityException("Token expired", e)
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Failed to parse identity token", e)
         }
 
-        fun parsePublicKeyAndGetClaims(identityToken: String, publicKey: PublicKey) : Claims {
-            return try {
-                Jwts.parserBuilder()
-                    .setSigningKey(publicKey)
-                    .build()
-                    .parseClaimsJws(identityToken)
-                    .body
-            } catch (e: SignatureException) {
-                throw SecurityException("Invalid token signature", e)
-            } catch (e: ExpiredJwtException){
-                throw SecurityException("Token expired", e)
-            } catch (e: Exception) {
-                throw IllegalArgumentException("Failed to parse identity token", e)
-            }
-
-        }
     }
 }
