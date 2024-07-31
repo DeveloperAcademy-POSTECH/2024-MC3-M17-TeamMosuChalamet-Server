@@ -10,11 +10,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
+import java.io.PrintWriter
 
 class JWTFilter(private val jwtUtil: JWTUtil) : OncePerRequestFilter() {
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
-        val authorizationHeader = request.getHeader("Authorization")
+        val authorizationHeader = request.getHeader("Access")
 
         when {
             authorizationHeader == null || !authorizationHeader.startsWith("Bearer ") -> {
@@ -23,16 +24,33 @@ class JWTFilter(private val jwtUtil: JWTUtil) : OncePerRequestFilter() {
                 return
             }
             else -> {
-                val token = authorizationHeader.split(" ")[1]
-                println("token: $token")
-                if (jwtUtil.isExpired(token)) {
+                val accessToken = authorizationHeader.split(" ")[1]
+                println("token: $accessToken")
+                if (jwtUtil.isExpired(accessToken)) {
+                    val writer: PrintWriter = response.writer
+                    writer.write("token expired")
                     println("token expired")
-                    filterChain.doFilter(request, response)
+                    //filterChain.doFilter(request, response)
+
+                    response.status = 401
                     return
                 }
 
-                val username = jwtUtil.getUsername(token)
-                val role = jwtUtil.getRole(token)
+                val category = jwtUtil.getCategory(accessToken)
+
+                if(category != "access") {
+
+                    val writer: PrintWriter = response.writer
+                    writer.write("invalid access token")
+
+                    println("invalid access token")
+                    //filterChain.doFilter(request, response)
+
+                    return
+                }
+
+                val username = jwtUtil.getUsername(accessToken)
+                val role = jwtUtil.getRole(accessToken)
 
                 println("username: $username")
                 println("role: $role")

@@ -34,4 +34,8 @@ class MemberService (
             .orElseThrow() { MemberNotFoundException(memberId) }
             .deviceToken ?: throw IllegalArgumentException("Device token is null")
     }
+
+    fun saveMember(member: Member) : Member {
+        return memberRepository.save(member)
+    }
 }

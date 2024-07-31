@@ -25,8 +25,8 @@ class MessageUseCase(
     )
     fun sendMessage(destinationMemberId: Long) {
         val memberDto = MemberDto.of(memberService.findMemberById(getMemberId()))
-        val destinationMemberDto = MemberDto.of(memberService.findMemberById(destinationMemberId))
-        messageService.sendPushNotification(memberDto, destinationMemberDto)
+        val destinationDeviceToken = memberService.findDeviceTokenByMemberId(destinationMemberId)
+        messageService.sendPushNotification(memberDto, destinationDeviceToken)
     }
 
     private fun toSenderInfo (memberDto: MemberDto) : SenderInfo {

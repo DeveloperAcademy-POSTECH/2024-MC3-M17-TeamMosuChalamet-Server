@@ -6,13 +6,12 @@ import java.security.PublicKey
 
 @Component
 class AppleOAuthUserProvider(
+
     private val appleClient: AppleClient,
     private val jwtParser: AppleJwtParser,
     private val publicKeyGenerator: PublicKeyGenerator,
     private val appleClaimsValidator: AppleClaimsValidator
 ) {
-
-
 
     fun getAppleOAuthUser(identityToken : String) : String{
         // 1. identity token 받아오기 -> 완료
@@ -30,7 +29,6 @@ class AppleOAuthUserProvider(
         }
 
         val userId = claims.subject.toString() // 유저 아이디
-        val fullName = claims["fullName"].toString() // 유저 이름
 
         return userId
     }

@@ -28,9 +28,4 @@ class MemberController(
         profileUseCase.updateProfileImage(profileImage)
         return ResponseEntity.ok(profileUseCase.loadProfile())
     }
-
-    @GetMapping("/signin")
-    fun signIn(@RequestBody signInRequest : SignInRequest) : ResponseEntity<String> {
-        return ResponseEntity.ok(signInRequest.identityToken?.let { loginUseCase.signIn(it) }?: "identityToken is null")
-    }
 }
