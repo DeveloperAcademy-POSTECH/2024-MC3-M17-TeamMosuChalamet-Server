@@ -63,10 +63,11 @@ class LoginFilter(
 
         // jwt 생성
         val accessToken = jwtUtil.generateToken("access", memberDto.id.toString(), memberDto.role!!, 30 * 24 * 60 * 60 * 1000L) // 30일
-        val refreshToken = jwtUtil.generateToken("refresh", memberDto.id.toString(), memberDto.role!!, 60 * 24 * 60 * 60 * 1000L) // 60일
+        val refreshToken = jwtUtil.generateToken("refresh", memberDto.name!!, memberDto.role!!, 60 * 24 * 60 * 60 * 1000L) // 60일
 
         response.addHeader("Access", "Bearer $accessToken")
         response.addHeader("Refresh", "Bearer $refreshToken")
+        //
 
         response.status = 201
     }
