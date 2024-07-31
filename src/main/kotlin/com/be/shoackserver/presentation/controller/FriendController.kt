@@ -6,6 +6,7 @@ import com.be.shoackserver.application.usecase.FriendUseCase
 import com.be.shoackserver.presentation.response.FriendResponse
 import lombok.extern.log4j.Log4j2
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping

@@ -18,7 +18,7 @@ class CustomUserDetails(private val member: Member) : UserDetails {
 
     override fun getPassword(): String = bCryptPasswordEncoder().encode(member.name)
 
-    override fun getUsername(): String = member.appleUserId!!
+    override fun getUsername(): String = member.id.toString()
 
     override fun isAccountNonExpired(): Boolean = true
 

@@ -2,6 +2,7 @@ package com.be.shoackserver.jwt
 
 import com.be.shoackserver.application.dto.CustomUserDetails
 import com.be.shoackserver.domain.entity.Member
+import com.be.shoackserver.domain.repository.MemberRepository
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -37,7 +38,7 @@ class JWTFilter(private val jwtUtil: JWTUtil) : OncePerRequestFilter() {
                 println("role: $role")
 
                 val member = Member().apply {
-                    appleUserId = username
+                    this.id = username.toLong()
                     this.role = role
                 }
 

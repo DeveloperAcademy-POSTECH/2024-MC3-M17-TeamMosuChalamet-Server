@@ -13,9 +13,8 @@ class FriendService (
     private val memberRepository: MemberRepository,
     private val friendshipRepository: FriendshipRepository
 ) {
-    private val memberId: Long = 1
 
-    fun saveFriendship(requesterId: Long) {
+    fun saveFriendship(requesterId: Long, memberId: Long) {
 
         val selfMember = memberRepository.findById(memberId)
             .orElseThrow() { MemberNotFoundException(memberId) }
@@ -26,7 +25,7 @@ class FriendService (
         }
 
 
-    fun getFriendList(): List<Member> {
+    fun getFriendList(memberId: Long): List<Member> {
 
         val selfMember = memberRepository.findById(memberId)
             .orElseThrow() {MemberNotFoundException(memberId)}

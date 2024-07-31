@@ -11,9 +11,8 @@ import org.springframework.stereotype.Service
 class MemberService (
     private val memberRepository: MemberRepository
 ) {
-    private val memberId: Long = 1
 
-    fun getMember() : Member {
+    fun getMember(memberId: Long) : Member {
         return memberRepository.findById(memberId)
             .orElseThrow() { MemberNotFoundException(memberId) }
     }
@@ -24,7 +23,7 @@ class MemberService (
     }
 
     @Transactional
-    fun updateMemberProfileImageName(imageName: String) {
+    fun updateMemberProfileImageName(imageName: String, memberId: Long) {
         val member = memberRepository.findById(memberId)
             .orElseThrow() {MemberNotFoundException(memberId)}
         member.imageName = imageName

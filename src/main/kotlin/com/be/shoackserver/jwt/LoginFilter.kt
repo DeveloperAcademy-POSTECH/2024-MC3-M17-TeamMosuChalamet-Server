@@ -21,7 +21,7 @@ class LoginFilter(
         val deviceToken = request.getParameter("deviceToken")
 
         // 애플 로그인 등장!
-
+        // 애플 고유 아이디를 세션에 담아두고 싶진 않다..
         val authenticationToken = UsernamePasswordAuthenticationToken(identityToken, name, null)
 
         return authenticationManager.authenticate(authenticationToken)

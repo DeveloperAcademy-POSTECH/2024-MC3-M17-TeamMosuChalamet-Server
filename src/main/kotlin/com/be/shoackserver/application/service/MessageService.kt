@@ -25,6 +25,7 @@ class MessageService(
 ) {
     fun sendPushNotification(
         memberDto: MemberDto,
+        destinationMemberDto: MemberDto
     ) {
         // SimpleApnsPayloadBuilder를 사용하여 Gson or Jackson 기반으로 payload 생성
         val payloadBuilder: ApnsPayloadBuilder = SimpleApnsPayloadBuilder()
@@ -41,7 +42,7 @@ class MessageService(
 //        payloadBuilder.addCustomProperty("senderInfo", senderInfoJson)
 
         val payload = payloadBuilder.build()
-        val token = TokenUtil.sanitizeTokenString(memberDto.deviceToken)
+        val token = TokenUtil.sanitizeTokenString(destinationMemberDto.deviceToken)
         val pushNotification = SimpleApnsPushNotification(token, topic, payload)
 
         /*

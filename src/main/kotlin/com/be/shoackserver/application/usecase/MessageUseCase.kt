@@ -1,6 +1,7 @@
 package com.be.shoackserver.application.usecase
 
 import com.be.shoackserver.application.dto.MemberDto
+import com.be.shoackserver.application.service.AuthenticationService
 import com.be.shoackserver.application.service.ImageService
 import com.be.shoackserver.application.service.MemberService
 import com.be.shoackserver.application.service.MessageService
@@ -10,8 +11,12 @@ import org.springframework.stereotype.Service
 class MessageUseCase(
     private val messageService: MessageService,
     private val memberService: MemberService,
-    private val imageService: ImageService
+    private val imageService: ImageService,
+    private val authenticationService: AuthenticationService
 ) {
+    private fun getMemberId() : Long {
+        return authenticationService.getMemberIdFromSecurityContext()
+    }
     data class SenderInfo(
         val senderId: Long,
         val senderName: String,
@@ -19,8 +24,9 @@ class MessageUseCase(
         val senderDeviceToken: String
     )
     fun sendMessage(destinationMemberId: Long) {
-        val memberDto = MemberDto.of(memberService.findMemberById(destinationMemberId))
-        messageService.sendPushNotification(memberDto)
+        val memberDto = MemberDto.of(memberService.findMemberById(getMemberId()))
+        val destinationMemberDto = MemberDto.of(memberService.findMemberById(destinationMemberId))
+        messageService.sendPushNotification(memberDto, destinationMemberDto)
     }
 
     private fun toSenderInfo (memberDto: MemberDto) : SenderInfo {
