@@ -36,6 +36,8 @@ class LoginFilter(
         val token = jwtUtil.generateToken(username, role, 30 * 24 * 60 * 60 * 1000L) // 30일
 
         response.addHeader("Authorization", "Bearer $token")
+        response.status = 200
+        response.contentType = "application/json"
 
         println("success")
     }
