@@ -11,21 +11,34 @@ import java.io.File
 @Configuration
 class ApnsConfig {
 
+//    @Bean
+//    fun apnsClient(): ApnsClient {
+//        val resourceStream = javaClass.getResourceAsStream("/AuthKey_DXK7GC475X.p8")
+//        return ApnsClientBuilder()
+//            // 개발환경 사용 (배포환경이라면 PRODUCTION_APNS_HOST 사용)
+//            .setApnsServer(ApnsClientBuilder.DEVELOPMENT_APNS_HOST)
+//            /*
+//            * pathName: developer 계정의 p8 파일 경로
+//            * teamId: developer 계정의 Team ID
+//            * keyId: developer 계정의 Key ID
+//            * */
+//
+//            .setSigningKey(ApnsSigningKey.loadFromPkcs8File(
+//                File("src/main/resources/AuthKey_DXK7GC475X.p8"),
+//                "R62RZ89ZRU", "DXK7GC475X"))
+//            .build();
+//    }
+
     @Bean
     fun apnsClient(): ApnsClient {
-        val resourceStream = javaClass.getResourceAsStream("/AuthKey_DXK7GC475X.p8")
-        return ApnsClientBuilder()
-            // 개발환경 사용 (배포환경이라면 PRODUCTION_APNS_HOST 사용)
-            .setApnsServer(ApnsClientBuilder.DEVELOPMENT_APNS_HOST)
-            /*
-            * pathName: developer 계정의 p8 파일 경로
-            * teamId: developer 계정의 Team ID
-            * keyId: developer 계정의 Key ID
-            * */
+        val keyInputStream = this::class.java.classLoader.getResourceAsStream("AuthKey_DXK7GC475X.p8")
+            ?: throw IllegalStateException("APNS key file not found in classpath")
 
-            .setSigningKey(ApnsSigningKey.loadFromPkcs8File(
-                File("src/main/resources/AuthKey_DXK7GC475X.p8"),
-                "R62RZ89ZRU", "DXK7GC475X"))
-            .build();
+        val signingKey = ApnsSigningKey.loadFromInputStream(keyInputStream, "R62RZ89ZRU", "DXK7GC475X")
+
+        return ApnsClientBuilder()
+            .setApnsServer(ApnsClientBuilder.DEVELOPMENT_APNS_HOST)
+            .setSigningKey(signingKey)
+            .build()
     }
 }

@@ -21,14 +21,11 @@ class LoginFilter(
 
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication {
         val identityToken = request.getParameter("identityToken")//obtainUsername(request)
-        val name = request.getParameter("name")//obtainPassword(request)
-        val deviceToken = request.getParameter("deviceToken")
 
         // 애플 로그인 등장!
         val appleUserId = loginUseCase.signIn(identityToken)
         // 애플 고유 아이디를 세션에 담아두고 싶진 않다..
-
-        val authenticationToken = UsernamePasswordAuthenticationToken(appleUserId, name, null)
+        val authenticationToken = UsernamePasswordAuthenticationToken(appleUserId, "uotp", null)
 
         return authenticationManager.authenticate(authenticationToken)
     }
@@ -57,6 +54,7 @@ class LoginFilter(
         val name = request.getParameter("name")
         val deviceToken = request.getParameter("deviceToken")
 
+        // 애플 인증으로 appleUserId를 받아온다
         val appleUserId = loginUseCase.signIn(identityToken)
 
         val memberDto = memberManageUseCase.addNewMember(appleUserId, name, deviceToken)
@@ -67,7 +65,6 @@ class LoginFilter(
 
         response.addHeader("Access", "Bearer $accessToken")
         response.addHeader("Refresh", "Bearer $refreshToken")
-        //
 
         response.status = 201
     }

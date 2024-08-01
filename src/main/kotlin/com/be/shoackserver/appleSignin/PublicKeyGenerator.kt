@@ -14,22 +14,22 @@ class PublicKeyGenerator {
 
     // identity token의 alg와 kid와 일치하는 public key를 확인하기
     fun generatePublicKey(headers : Map<String, String>, applePublicKeys: ApplePublicKeys) : PublicKey {
-        var applePublicKey = applePublicKeys.getMatchesKey(headers["alg"], headers["kid"])
+        val applePublicKey = applePublicKeys.getMatchesKey(headers["alg"], headers["kid"])
 
         return generatePublicKeyWithApplePublicKey(applePublicKey)
     }
 
     private fun generatePublicKeyWithApplePublicKey(applePublicKey: ApplePublicKey) : PublicKey {
-        var nBytes = Base64.getUrlDecoder().decode(applePublicKey.n) // 애플 public key의 n을 base64 디코딩 -> byte 배열
-        var eBytes = Base64.getUrlDecoder().decode(applePublicKey.e) // 애플 public key의 e을 base64 디코딩 -> byte 배열
+        val nBytes = Base64.getUrlDecoder().decode(applePublicKey.n) // 애플 public key의 n을 base64 디코딩 -> byte 배열
+        val eBytes = Base64.getUrlDecoder().decode(applePublicKey.e) // 애플 public key의 e을 base64 디코딩 -> byte 배열
 
-        var n = BigInteger(1, nBytes) // Base64 디코딩된 바이트 배열은 부호 없는 형태이기 때문에 BigInteger의 부호 없는 생성자를 사용
-        var e = BigInteger(1, eBytes) // Base64 디코딩된 바이트 배열은 부호 없는 형태이기 때문에 BigInteger의 부호 없는 생성자를 사용
+        val n = BigInteger(1, nBytes) // Base64 디코딩된 바이트 배열은 부호 없는 형태이기 때문에 BigInteger의 부호 없는 생성자를 사용
+        val e = BigInteger(1, eBytes) // Base64 디코딩된 바이트 배열은 부호 없는 형태이기 때문에 BigInteger의 부호 없는 생성자를 사용
 
-        var publicKeySpec = RSAPublicKeySpec(n, e)
+        val publicKeySpec = RSAPublicKeySpec(n, e)
 
         try {
-            var keyFactory = KeyFactory.getInstance(applePublicKey.kty) // 애플 public key의 kty(키 타입)로 KeyFactory 생성
+            val keyFactory = KeyFactory.getInstance(applePublicKey.kty) // 애플 public key의 kty(키 타입)로 KeyFactory 생성
 
             return keyFactory.generatePublic(publicKeySpec) // KeyFactory를 사용하여 public key 스펙으로 새로운 PublicKey 생성
         } catch (e : Exception) {

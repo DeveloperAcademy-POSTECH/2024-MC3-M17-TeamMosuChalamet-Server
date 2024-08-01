@@ -24,7 +24,7 @@ class FriendUseCase(
     fun loadFriendList() : List<FriendResponse> {
         return friendService.getFriendList(getMemberId())
             .map { MemberDto.of(it) }
-            .map { it.imageName = it.imageName?.let { imageService.generateS3URL("profile", it) } ?: throw IllegalStateException("Image name is null"); it }
+            .map { it.imageName = it.imageName?.let { imageService.generateS3URL("profile", it) }; it }
             .map { FriendResponse.of(it) }
     }
 }

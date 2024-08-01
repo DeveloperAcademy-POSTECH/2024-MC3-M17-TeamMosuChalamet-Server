@@ -20,13 +20,13 @@ class ProfileUseCase(
 
     fun loadProfile() : ProfileResponse{
         val memberDto = MemberDto.of(memberService.getMember(getMemberId()))
-        memberDto.imageName = memberDto.imageName?.let { imageService.generateS3URL("profile", it) } ?: throw IllegalStateException("Image name is null")
+        memberDto.imageName = memberDto.imageName?.let { imageService.generateS3URL("profile", it) }// ?: throw IllegalStateException("Image name is null")
         return ProfileResponse.of(memberDto)
     }
 
     fun updateProfileImage(multipartFile: MultipartFile) {
         // 기존 프로필 이미지 삭제
-        memberService.getMember(getMemberId()).imageName?.let { imageService.deleteImage("profile", it) } ?: throw IllegalStateException("Image name is null")
+        memberService.getMember(getMemberId()).imageName?.let { imageService.deleteImage("profile", it) }// ?: throw IllegalStateException("Image name is null")
         val imageName = imageService.uploadMultipartFile(multipartFile, "profile")
         memberService.updateMemberProfileImageName(imageName, getMemberId())
 

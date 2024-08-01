@@ -32,6 +32,8 @@ class MessageService(
         payloadBuilder.setAlertTitle(memberDto.name) // 송신자의 이름
         payloadBuilder.setAlertBody("쇽! 날 봐줘!") // 메시지 내용
 
+        payloadBuilder.setSound("default")
+
 //        // 송신자 정보 추가
 //        val senderInfoJson : JsonObject = JsonObject().apply {
 //            addProperty("senderId", senderInfo.senderId)

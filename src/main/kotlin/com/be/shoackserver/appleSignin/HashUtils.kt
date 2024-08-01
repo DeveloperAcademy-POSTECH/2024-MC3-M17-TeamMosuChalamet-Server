@@ -6,7 +6,6 @@ class HashUtils {
 
     companion object {
         fun hash(nonce: String): String {
-
             return nonce
         }
     }

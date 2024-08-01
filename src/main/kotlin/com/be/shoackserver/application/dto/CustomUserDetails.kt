@@ -16,7 +16,7 @@ class CustomUserDetails(private val member: Member) : UserDetails {
 
     fun bCryptPasswordEncoder(): BCryptPasswordEncoder = BCryptPasswordEncoder()
 
-    override fun getPassword(): String = bCryptPasswordEncoder().encode(member.name) // 인코딩 해야 autheticationManager에서 비교 가능
+    override fun getPassword(): String = bCryptPasswordEncoder().encode("uotp") // 인코딩 해야 autheticationManager에서 비교 가능
 
     override fun getUsername(): String = member.id.toString()
 
