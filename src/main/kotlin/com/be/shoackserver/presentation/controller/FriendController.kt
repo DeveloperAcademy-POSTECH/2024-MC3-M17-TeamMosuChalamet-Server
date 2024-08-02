@@ -7,6 +7,7 @@ import com.be.shoackserver.presentation.response.FriendResponse
 import lombok.extern.log4j.Log4j2
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -29,5 +30,11 @@ class FriendController (
     fun addFriend(@RequestParam requesterId : Long) : ResponseEntity<Void>{
         friendUseCase.allowFriendshipRequest(requesterId)
         return ResponseEntity.created(URI.create("/friend")).build()
+    }
+
+    @DeleteMapping("/friend")
+    fun deleteFriend(@RequestParam friendId: Long) : ResponseEntity<Void> {
+        friendUseCase.deleteFriend(friendId)
+        return ResponseEntity.ok().build()
     }
 }

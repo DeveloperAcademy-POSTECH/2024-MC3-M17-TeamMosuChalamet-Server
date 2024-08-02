@@ -21,7 +21,8 @@ import java.util.concurrent.ExecutionException
 @Service
 class MessageService(
     private val apnsClient: ApnsClient,
-    @Value("\${oauth.apple.client-id}") private val topic: String
+    @Value("\${oauth.apple.client-id}") private val topic: String,
+    @Value("\${oauth.apple.watch-client-id}") private val watchBundleId: String
 ) {
     fun sendPushNotification(
         memberDto: MemberDto,
@@ -31,10 +32,15 @@ class MessageService(
         val payloadBuilder: ApnsPayloadBuilder = SimpleApnsPayloadBuilder()
         payloadBuilder.setAlertTitle(memberDto.name) // 송신자의 이름
         payloadBuilder.setAlertBody("쇽! 날 봐줘!") // 메시지 내용
-
         payloadBuilder.setSound("default")
+        payloadBuilder.setCategoryName("shoakreceive")
 
-//        // 송신자 정보 추가
+        payloadBuilder.addCustomProperty("profileName", memberDto.name)
+        payloadBuilder.addCustomProperty("profileImageURL", memberDto.imageName)
+        payloadBuilder.addCustomProperty("message", "쇽! 날 봐줘!")
+        payloadBuilder.addCustomProperty("Simulator Target Bundle", watchBundleId)
+
+
 //        val senderInfoJson : JsonObject = JsonObject().apply {
 //            addProperty("senderId", senderInfo.senderId)
 //            addProperty("senderName", senderInfo.senderName)

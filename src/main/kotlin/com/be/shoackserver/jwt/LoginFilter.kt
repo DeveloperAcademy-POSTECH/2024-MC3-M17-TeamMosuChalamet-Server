@@ -6,12 +6,14 @@ import com.be.shoackserver.application.usecase.MemberManageUseCase
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import lombok.extern.log4j.Log4j2
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
+@Log4j2
 class LoginFilter(
     private val authenticationManager: AuthenticationManager,
     private val jwtUtil: JWTUtil,
@@ -60,8 +62,8 @@ class LoginFilter(
         val memberDto = memberManageUseCase.addNewMember(appleUserId, name, deviceToken)
 
         // jwt 생성
-        val accessToken = jwtUtil.generateToken("access", memberDto.id.toString(), memberDto.role!!, 30 * 24 * 60 * 60 * 1000L) // 30일
-        val refreshToken = jwtUtil.generateToken("refresh", memberDto.name!!, memberDto.role!!, 60 * 24 * 60 * 60 * 1000L) // 60일
+        val accessToken = jwtUtil.generateToken("access", memberDto.id.toString(), memberDto.role!!,  24 * 60 * 60 * 1000L) // 1일
+        val refreshToken = jwtUtil.generateToken("refresh", memberDto.name!!, memberDto.role!!, 30 * 24 * 60 * 60 * 1000L) // 30일
 
         response.addHeader("Access", "Bearer $accessToken")
         response.addHeader("Refresh", "Bearer $refreshToken")

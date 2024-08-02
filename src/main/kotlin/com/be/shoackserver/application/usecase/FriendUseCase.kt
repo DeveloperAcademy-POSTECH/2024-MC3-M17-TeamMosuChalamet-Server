@@ -27,4 +27,8 @@ class FriendUseCase(
             .map { it.imageName = it.imageName?.let { imageService.generateS3URL("profile", it) }; it }
             .map { FriendResponse.of(it) }
     }
+
+    fun deleteFriend(friendId: Long) {
+        friendService.deleteFriendShip(friendId, getMemberId())
+    }
 }

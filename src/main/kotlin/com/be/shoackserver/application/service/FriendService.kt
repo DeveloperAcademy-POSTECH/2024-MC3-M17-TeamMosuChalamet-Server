@@ -15,33 +15,54 @@ class FriendService (
 ) {
 
     fun saveFriendship(requesterId: Long, memberId: Long) {
+        // 쟈기 자신인 경우 예외처리
+        if (requesterId == memberId) {
+            throw IllegalArgumentException("Cannot be friends with yourself")
+        }
 
         val selfMember = memberRepository.findById(memberId)
             .orElseThrow() { MemberNotFoundException(memberId) }
         val requester = memberRepository.findById(requesterId)
-            .orElseThrow() {MemberNotFoundException(requesterId)}
+            .orElseThrow() { MemberNotFoundException(requesterId) }
 
-            friendshipRepository.save(Friendship.create(requester, selfMember))
+        // 이미 친구인 경우 예외처리
+        if (friendshipRepository.existsBySubjectMemberAndObjectMember(selfMember, requester) ||
+            friendshipRepository.existsBySubjectMemberAndObjectMember(requester, selfMember)
+        ) {
+            throw IllegalStateException("Already friends")
         }
 
+        friendshipRepository.save(Friendship.create(requester, selfMember))
+    }
 
     fun getFriendList(memberId: Long): List<Member> {
-
         val selfMember = memberRepository.findById(memberId)
             .orElseThrow() {MemberNotFoundException(memberId)}
 
         val friendListAsSubject = friendshipRepository
             .findAllBySubjectMember(selfMember)
             .filter { it.status == Friendship.FriendshipStatus.ACCEPTED }
-            .mapNotNull { it.objectMember }
+            .map { it.objectMember }
 
         val friendListAsObject = friendshipRepository
             .findAllByObjectMember(selfMember)
             .filter { it.status == Friendship.FriendshipStatus.ACCEPTED }
-            .mapNotNull { it.subjectMember }
+            .map { it.subjectMember }
 
         return friendListAsSubject + friendListAsObject
+    }
 
+    fun deleteFriendShip(friendId: Long, memberId: Long) {
+        val selfMember = memberRepository.findById(memberId)
+            .orElseThrow() {MemberNotFoundException(memberId)}
+        val friendMember = memberRepository.findById(friendId)
+            .orElseThrow() {MemberNotFoundException(friendId)}
+
+        friendshipRepository.findBySubjectMemberAndObjectMember(selfMember, friendMember)
+            ?.let(friendshipRepository::delete)
+            ?: friendshipRepository.findBySubjectMemberAndObjectMember(friendMember, selfMember)
+                ?.let(friendshipRepository::delete)
+                ?: throw IllegalStateException("There no friendship between you and the friend")
     }
 
 }

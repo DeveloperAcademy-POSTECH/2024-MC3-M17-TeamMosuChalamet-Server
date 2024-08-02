@@ -10,7 +10,7 @@ class MemberManageUseCase(
     private val memberService: MemberService
 ) {
     fun addNewMember(appleUserId: String, name: String, deviceToken: String) : MemberDto {
-        val memberDto : MemberDto = MemberDto()
+        val memberDto = MemberDto()
         memberDto.appleUserId = appleUserId
         memberDto.name = name
         memberDto.deviceToken = deviceToken

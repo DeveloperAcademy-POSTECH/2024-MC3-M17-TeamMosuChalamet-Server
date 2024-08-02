@@ -25,19 +25,20 @@ class MessageUseCase(
     )
     fun sendMessage(destinationMemberId: Long) {
         val memberDto = MemberDto.of(memberService.findMemberById(getMemberId()))
+        memberDto.imageName = memberDto.imageName?.let {imageService.generateS3URL("profile", it)}
         val destinationDeviceToken = memberService.findDeviceTokenByMemberId(destinationMemberId)
         messageService.sendPushNotification(memberDto, destinationDeviceToken)
     }
 
-    private fun toSenderInfo (memberDto: MemberDto) : SenderInfo {
-        val id = memberDto.id ?: throw IllegalStateException("Member id is null")
-        val name = memberDto.name ?: throw IllegalStateException("Member name is null")
-        val imageURL = imageService.generateS3URL(
-            "profile",
-            memberDto.imageName ?: throw IllegalStateException("Image name is null")
-        )
-        val deviceToken = memberDto.deviceToken ?: throw IllegalStateException("Device token is null")
-
-        return SenderInfo(id, name, imageURL, deviceToken)
-    }
+//    private fun toSenderInfo (memberDto: MemberDto) : SenderInfo {
+//        val id = memberDto.id ?: throw IllegalStateException("Member id is null")
+//        val name = memberDto.name ?: throw IllegalStateException("Member name is null")
+//        val imageURL = imageService.generateS3URL(
+//            "profile",
+//            memberDto.imageName ?: throw IllegalStateException("Image name is null")
+//        )
+//        val deviceToken = memberDto.deviceToken ?: throw IllegalStateException("Device token is null")
+//
+//        return SenderInfo(id, name, imageURL, deviceToken)
+//    }
 }
