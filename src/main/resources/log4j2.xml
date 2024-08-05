@@ -19,6 +19,12 @@
                 <SizeBasedTriggeringPolicy size="100MB"/>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${LOGS_PATH}" maxDepth="1">
+                    <IfFileName glob="log4j2.*.log.gz" />
+                    <IfLastModified age="10d" />
+                </Delete>
+            </DefaultRolloverStrategy>
         </RollingFile>
     </Appenders>
 

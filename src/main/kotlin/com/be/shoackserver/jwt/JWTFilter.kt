@@ -2,19 +2,15 @@ package com.be.shoackserver.jwt
 
 import com.be.shoackserver.application.dto.CustomUserDetails
 import com.be.shoackserver.domain.entity.Member
-import com.be.shoackserver.domain.repository.MemberRepository
-import com.be.shoackserver.exception.UnauthorizedException
+import io.jsonwebtoken.JwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import lombok.extern.log4j.Log4j2
-import org.springframework.core.Ordered
-import org.springframework.core.annotation.Order
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
-import java.io.PrintWriter
 
 @Log4j2
 class JWTFilter(private val jwtUtil: JWTUtil) : OncePerRequestFilter() {
@@ -30,13 +26,13 @@ class JWTFilter(private val jwtUtil: JWTUtil) : OncePerRequestFilter() {
             else -> {
                 val accessToken = authorizationHeader.split(" ")[1]
                 if (jwtUtil.isExpired(accessToken)) {
-                    throw UnauthorizedException("Token is expired")
+                    throw JwtException("Token is expired")
                 }
 
                 val category = jwtUtil.getCategory(accessToken)
 
                 if(category != "access") {
-                    throw UnauthorizedException("Invalid access token category")
+                    throw JwtException("Invalid access token category")
                 }
 
                 val username = jwtUtil.getUsername(accessToken)

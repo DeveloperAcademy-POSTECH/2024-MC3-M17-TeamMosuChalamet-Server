@@ -38,19 +38,6 @@ class ExceptionController {
         return ResponseEntity(errorDetail, HttpStatus.FORBIDDEN)
     }
 
-    @ExceptionHandler(CustomException::class)
-    fun handleAuthenticationException(e: CustomException, request: HttpServletRequest) : ResponseEntity<ErrorResponse> {
-        val errorDetail = ErrorResponse(
-            System.currentTimeMillis(),
-            HttpStatus.UNAUTHORIZED.value(),
-            HttpStatus.UNAUTHORIZED.name,
-            e.stackTraceToString(),
-            e.message ?: "error message not defined",
-            request.requestURI
-        )
-        return ResponseEntity(errorDetail, HttpStatus.UNAUTHORIZED)
-    }
-
     @ExceptionHandler(Exception::class)
     fun handleGlobalException(e: Exception, request: HttpServletRequest) : ResponseEntity<ErrorResponse> {
         val errorDetail = ErrorResponse(
@@ -72,6 +59,4 @@ data class ErrorResponse(
     val trace: String,
     val message: String,
     val path: String
-){
-
-}
+)

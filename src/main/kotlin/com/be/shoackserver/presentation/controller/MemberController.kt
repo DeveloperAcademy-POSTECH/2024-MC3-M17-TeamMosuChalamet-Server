@@ -1,9 +1,7 @@
 package com.be.shoackserver.presentation.controller
 
-import com.be.shoackserver.application.service.MemberService
 import com.be.shoackserver.application.usecase.LoginUseCase
 import com.be.shoackserver.application.usecase.ProfileUseCase
-import com.be.shoackserver.presentation.request.SignInRequest
 import com.be.shoackserver.presentation.response.ProfileResponse
 import lombok.extern.log4j.Log4j2
 import org.springframework.http.ResponseEntity
