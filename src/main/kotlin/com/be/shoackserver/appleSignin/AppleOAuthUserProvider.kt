@@ -6,13 +6,11 @@ import java.security.PublicKey
 
 @Component
 class AppleOAuthUserProvider(
-
-    private val appleClient: AppleClient,
+    private val appleClient: AppleClientForPublicKey,
     private val jwtParser: AppleJwtParser,
     private val publicKeyGenerator: PublicKeyGenerator,
     private val appleClaimsValidator: AppleClaimsValidator
 ) {
-
     fun getAppleOAuthUser(identityToken : String) : String{
         // 1. identity token 받아오기 -> 완료
         // 2. 애플 공개키 목록 받아오기

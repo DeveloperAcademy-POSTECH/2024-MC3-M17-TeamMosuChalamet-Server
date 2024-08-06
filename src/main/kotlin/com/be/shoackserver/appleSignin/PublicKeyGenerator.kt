@@ -11,7 +11,6 @@ import java.util.*
 
 @Component
 class PublicKeyGenerator {
-
     // identity token의 alg와 kid와 일치하는 public key를 확인하기
     fun generatePublicKey(headers : Map<String, String>, applePublicKeys: ApplePublicKeys) : PublicKey {
         val applePublicKey = applePublicKeys.getMatchesKey(headers["alg"], headers["kid"])

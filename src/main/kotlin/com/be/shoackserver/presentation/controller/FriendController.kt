@@ -18,6 +18,7 @@ import java.net.URI
 class FriendController (
     private val friendUseCase: FriendUseCase
 ) {
+
     @GetMapping("/friend")
     fun getFriendList() : ResponseEntity<List<FriendResponse>> {
         return ResponseEntity.ok(friendUseCase.loadFriendList())

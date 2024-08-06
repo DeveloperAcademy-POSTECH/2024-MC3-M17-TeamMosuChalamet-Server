@@ -12,7 +12,7 @@ class AppleClaimsValidator(
 ) {
     private val encryptedNonce: String = HashUtils.hash(nonce)
 
-    public fun validate(claims: Claims) : Boolean{
+    fun validate(claims: Claims) : Boolean{
 
         return claims.issuer.contains(iss) && // iss 검증
                 claims.audience.contains(clientId) //&& // aud 검증

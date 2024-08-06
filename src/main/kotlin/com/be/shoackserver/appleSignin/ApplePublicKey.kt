@@ -1,7 +1,6 @@
 package com.be.shoackserver.appleSignin
 
 class ApplePublicKey {
-
     var kty: String? = null
     var kid: String? = null
     var use: String? = null

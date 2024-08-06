@@ -14,11 +14,11 @@ import java.util.*
 
 @Component
 class AppleJwtParser {
-
     companion object {
         private var objectMapper = jacksonObjectMapper()
 
     }
+
     fun parseHeaders(identityToken: String) : Map<String, String>  {
         try {
             val encodedHeader = identityToken.split(".")[0] // . 으로 헤더, 페이로드, 시그니처 분리하고 헤더만 뽑아오기

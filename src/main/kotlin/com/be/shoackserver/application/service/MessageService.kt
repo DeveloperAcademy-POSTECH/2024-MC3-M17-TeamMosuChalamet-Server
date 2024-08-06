@@ -40,15 +40,6 @@ class MessageService(
         payloadBuilder.addCustomProperty("message", "쇽! 날 봐줘!")
         payloadBuilder.addCustomProperty("Simulator Target Bundle", watchBundleId)
 
-
-//        val senderInfoJson : JsonObject = JsonObject().apply {
-//            addProperty("senderId", senderInfo.senderId)
-//            addProperty("senderName", senderInfo.senderName)
-//            addProperty("senderImageURL", senderInfo.senderImageURL)
-//        }
-//
-//        payloadBuilder.addCustomProperty("senderInfo", senderInfoJson)
-
         val payload = payloadBuilder.build()
         val token = TokenUtil.sanitizeTokenString(destinationDeviceToken)
         val pushNotification = SimpleApnsPushNotification(token, topic, payload)
@@ -59,25 +50,6 @@ class MessageService(
         val sendNotificationFuture: PushNotificationFuture<SimpleApnsPushNotification, PushNotificationResponse<SimpleApnsPushNotification>> =
             apnsClient.sendNotification(pushNotification)
 
-//        try {
-//            val response =
-//                sendNotificationFuture.get()
-//
-//            if (response.isAccepted) {
-//                println("Push notification is accepted")
-//                println("Message : " + response.pushNotification.payload)
-//            } else {
-//                println(
-//                    "Notification is rejected : " +
-//                            response.rejectionReason
-//                )
-//            }
-//        } catch (e: ExecutionException) {
-//            System.err.println("Failed to send push notification.")
-//            e.printStackTrace()
-//        }
-
-//        비동기 처리
         sendNotificationFuture.whenComplete {response, throwable ->
             if (throwable != null) {
                 System.err.println("Failed to send push notification.")
@@ -101,11 +73,3 @@ class MessageService(
     }
 }
 
-/*
-func application(_ application: UIApplication,
-didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-    Messaging.messaging().apnsToken = deviceToken
-    let token = deviceToken as NSData
-            let token2 = token.map{String(format:"%02x",$0)}.joined()
-    print("디바이스 토큰 : ", token2)
-}*/

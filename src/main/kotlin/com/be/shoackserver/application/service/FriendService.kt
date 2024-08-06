@@ -1,7 +1,6 @@
 package com.be.shoackserver.application.service
 
-import com.be.shoackserver.application.dto.MemberDto
-import com.be.shoackserver.application.exception.MemberNotFoundException
+import com.be.shoackserver.exception.MemberNotFoundException
 import com.be.shoackserver.domain.entity.Friendship
 import com.be.shoackserver.domain.entity.Member
 import com.be.shoackserver.domain.repository.FriendshipRepository
@@ -13,7 +12,6 @@ class FriendService (
     private val memberRepository: MemberRepository,
     private val friendshipRepository: FriendshipRepository
 ) {
-
     fun saveFriendship(requesterId: Long, memberId: Long) {
         // 쟈기 자신인 경우 예외처리
         if (requesterId == memberId) {
@@ -37,7 +35,7 @@ class FriendService (
 
     fun getFriendList(memberId: Long): List<Member> {
         val selfMember = memberRepository.findById(memberId)
-            .orElseThrow() {MemberNotFoundException(memberId)}
+            .orElseThrow() { MemberNotFoundException(memberId) }
 
         val friendListAsSubject = friendshipRepository
             .findAllBySubjectMember(selfMember)
@@ -54,9 +52,9 @@ class FriendService (
 
     fun deleteFriendShip(friendId: Long, memberId: Long) {
         val selfMember = memberRepository.findById(memberId)
-            .orElseThrow() {MemberNotFoundException(memberId)}
+            .orElseThrow() { MemberNotFoundException(memberId) }
         val friendMember = memberRepository.findById(friendId)
-            .orElseThrow() {MemberNotFoundException(friendId)}
+            .orElseThrow() { MemberNotFoundException(friendId) }
 
         friendshipRepository.findBySubjectMemberAndObjectMember(selfMember, friendMember)
             ?.let(friendshipRepository::delete)

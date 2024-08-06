@@ -1,8 +1,7 @@
 package com.be.shoackserver.appleSignin
 
 
-class ApplePublicKeys {
-
+class ApplePublicKeys{
     private var keys: List<ApplePublicKey> = mutableListOf()
 
     fun getMatchesKey(alg: String?, kid: String?): ApplePublicKey {

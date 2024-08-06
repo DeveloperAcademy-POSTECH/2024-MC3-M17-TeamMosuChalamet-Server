@@ -1,6 +1,6 @@
 package com.be.shoackserver
 
-import com.be.shoackserver.appleSignin.AppleClient
+import com.be.shoackserver.appleSignin.AppleClientForPublicKey
 import com.be.shoackserver.appleSignin.ApplePublicKey
 import com.be.shoackserver.appleSignin.ApplePublicKeys
 import org.assertj.core.api.Assertions.assertThat
@@ -15,7 +15,7 @@ import kotlin.test.Test
 class AppleClientTest {
 
     @Autowired
-    private lateinit var appleClient : AppleClient
+    private lateinit var appleClient : AppleClientForPublicKey
 
     @Test
     @DisplayName("apple 서버와 통신하여 Apple public keys 응답을 받는다")

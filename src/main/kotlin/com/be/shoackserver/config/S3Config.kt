@@ -21,6 +21,7 @@ class S3Config(
     @Value("\${cloud.aws.region.static}")
     private val region: String
 ) {
+
     @Bean
     fun amazonS3Client(): AmazonS3 {
         return AmazonS3ClientBuilder.standard()

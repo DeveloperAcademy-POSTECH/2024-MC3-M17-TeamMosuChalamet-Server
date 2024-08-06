@@ -12,7 +12,6 @@ import javax.crypto.spec.SecretKeySpec
 @Log4j2
 @Component
 class JWTUtil(@Value("\${jwt.secret}") secret: String) {
-
     private val secretKey: SecretKey = SecretKeySpec(secret.toByteArray(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().algorithm)
 
     fun getUsername(token: String): String = Jwts.parser()

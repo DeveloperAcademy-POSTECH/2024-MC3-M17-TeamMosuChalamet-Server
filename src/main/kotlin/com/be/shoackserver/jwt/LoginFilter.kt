@@ -20,7 +20,6 @@ class LoginFilter(
     private val loginUseCase: LoginUseCase,
     private val memberManageUseCase: MemberManageUseCase
 ) : UsernamePasswordAuthenticationFilter() {
-
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication {
         val identityToken = request.getParameter("identityToken")//obtainUsername(request)
 

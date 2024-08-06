@@ -45,7 +45,7 @@ class SecurityConfig(
                 authorize
                     .requestMatchers("/login", "/api/reissue").permitAll()
                     .requestMatchers("/api/admin").hasRole("ADMIN")
-                    .anyRequest().hasAnyRole("USER", "ADMIN")
+                    .anyRequest().authenticated()
             }
             .addFilterBefore(JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter::class.java)
             .addFilterBefore(ExceptionHandlerFilter(), JWTFilter::class.java)

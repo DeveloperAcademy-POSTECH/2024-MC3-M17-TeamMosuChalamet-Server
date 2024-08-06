@@ -8,8 +8,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 
 class CustomUserDetails(private val member: Member) : UserDetails {
-
-
     override fun getAuthorities(): Collection<GrantedAuthority> {
         return listOf(GrantedAuthority { member.role })
     }

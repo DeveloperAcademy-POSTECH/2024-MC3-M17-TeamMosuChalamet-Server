@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.RestController
 @Log4j2
 @RestController
 @RequestMapping("/api")
-class ReissueController(
-    private final val jwtUtil: JWTUtil
+class JWTController(
+    private val jwtUtil: JWTUtil
 ) {
-
     @PostMapping("/reissue")
     fun reissue(request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<String> {
         val refreshHeader = request.getHeader("Refresh")
@@ -59,4 +58,10 @@ class ReissueController(
         }
 
     }
+
+
+
+
+
+
 }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class CustomUserDetailsService(private val memberRepository: MemberRepository) : UserDetailsService {
-
     override fun loadUserByUsername(username: String): UserDetails {
         val member = memberRepository.findMemberByAppleUserId(username)
             ?: throw UsernameNotFoundException("User not found with apple id: $username")
