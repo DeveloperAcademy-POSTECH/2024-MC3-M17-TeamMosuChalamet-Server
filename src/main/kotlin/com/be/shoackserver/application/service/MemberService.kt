@@ -43,4 +43,8 @@ class MemberService (
             .orElseThrow() { MemberNotFoundException(memberId) }
         member.deviceToken = deviceToken
     }
+
+    fun deleteMember(memberId: Long) {
+        memberRepository.deleteById(memberId)
+    }
 }

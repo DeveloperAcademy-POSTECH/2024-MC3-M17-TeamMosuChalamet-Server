@@ -19,7 +19,8 @@ class MessageController(
 
     @PostMapping("/message")
     fun sendMessage(@RequestBody messageRequest: MessageRequest) : ResponseEntity<Void> {
-        messageUseCase.sendMessage(messageRequest.destinationMemberId?.let { it }
+        messageUseCase.sendMessage(
+            messageRequest.destinationMemberId
             ?: throw IllegalStateException("Destination member id is null"))
         return ResponseEntity.created(URI.create("/")).build()
     }

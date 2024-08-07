@@ -29,4 +29,7 @@ class MemberManageUseCase(
     fun updateDeviceToken(deviceToken: String) {
         memberService.updateMemberDeviceToken(getMemberId(), deviceToken)
     }
+    fun deleteMember() {
+        memberService.deleteMember(getMemberId())
+    }
 }

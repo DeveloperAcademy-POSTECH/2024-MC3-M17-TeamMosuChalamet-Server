@@ -29,10 +29,16 @@ class MemberController(
     }
 
     @PatchMapping("/deviceToken")
-    fun updateDeviceToken(@RequestBody request: DeviceTokenRequest): ResponseEntity<String> {
+    fun updateDeviceToken(@RequestBody request: DeviceTokenRequest): ResponseEntity<Void> {
         memberManageUseCase.updateDeviceToken(
             request.deviceToken
             ?: throw IllegalStateException("Device token is null"))
+        return ResponseEntity.ok().build()
+    }
+
+    @DeleteMapping("/member")
+    fun deleteMember() : ResponseEntity<Void> {
+        memberManageUseCase.deleteMember()
         return ResponseEntity.ok().build()
     }
 }
