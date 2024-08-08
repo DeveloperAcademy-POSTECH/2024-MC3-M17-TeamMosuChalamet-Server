@@ -21,7 +21,7 @@ class LoginFilter(
     private val memberManageUseCase: MemberManageUseCase
 ) : UsernamePasswordAuthenticationFilter() {
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication {
-        val identityToken = request.getHeader("identityToken").split(" ")[1]
+        val identityToken = request.getHeader("Identity-Token").split(" ")[1]
 
         // 애플 로그인 등장!
         val appleUserId = loginUseCase.signIn(identityToken)
@@ -32,9 +32,14 @@ class LoginFilter(
     }
 
     override fun successfulAuthentication(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain, authResult: Authentication) {
+        val authorizationCode = request.getHeader("Authorization-Code")
+
         val customUserDetails = authResult.principal as CustomUserDetails
         val memberId = customUserDetails.username.toLong()
         val role = customUserDetails.authorities.first().authority
+
+        // refresh token 저장
+        memberManageUseCase.saveAppleRefreshToken(memberId, authorizationCode)
 
         // jwt 생성
         val accessToken = jwtUtil.generateToken("access", memberId, role, 30 * 24 * 60 * 60 * 1000L) // 30일
@@ -51,13 +56,17 @@ class LoginFilter(
 
     override fun unsuccessfulAuthentication(request: HttpServletRequest, response: HttpServletResponse, failed: AuthenticationException) {
         // 회원정보 저장로직
-        val identityToken = request.getHeader("identityToken").split(" ")[1]
-        val deviceToken = request.getHeader("deviceToken")
+        val identityToken = request.getHeader("Identity-Token").split(" ")[1]
+        val deviceToken = request.getHeader("Device-Token")
+        val authorizationCode = request.getHeader("Authorization-Code")
 
         // 애플 인증으로 appleUserId를 받아온다
         val appleUserId = loginUseCase.signIn(identityToken)
 
         val memberDto = memberManageUseCase.addNewMember(appleUserId, "이름 없음", deviceToken)
+
+        // refresh token 저장
+        memberManageUseCase.saveAppleRefreshToken(memberDto.id ?: throw IllegalArgumentException("Member id is null"), authorizationCode)
 
         // jwt 생성
         val accessToken = jwtUtil.generateToken("access", memberDto.id!!, memberDto.role!!,  24 * 60 * 60 * 1000L) // 1일

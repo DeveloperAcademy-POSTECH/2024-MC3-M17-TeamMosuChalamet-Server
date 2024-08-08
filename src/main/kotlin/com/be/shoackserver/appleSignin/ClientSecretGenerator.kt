@@ -17,7 +17,8 @@ class ClientSecretGenerator(
     @Value("\${oauth.apple.team-id}") private val teamId: String,
     @Value("\${oauth.apple.client-id}") private val clientId: String,
     @Value("\${oauth.apple.endpoint}") private val endpoint: String,
-    @Value("\${oauth.apple.p8-key-name}") private val keyFileName: String
+    @Value("\${oauth.apple.p8-key-name}") private val keyFileName: String,
+    @Value("\${oauth.apple.p8-key}") private val privateKey: String
 ) {
     private val SIX_MONTHS_IN_MILLISECONDS = 6L * 30 * 24 * 60 * 60 * 1000
 
@@ -35,17 +36,14 @@ class ClientSecretGenerator(
         .compact()
 
     private fun loadPrivateKey(filename: String): PrivateKey {
-        val resource = ClassPathResource(filename)
-        val keyBytes = resource.inputStream.readAllBytes()
-        val keySpec =  PKCS8EncodedKeySpec(keyBytes)
+//        val resource = ClassPathResource(filename)
+//        val keyBytes = resource.inputStream.readAllBytes()
+        val keyContent = Base64.getDecoder().decode(privateKey)
+        val keySpec =  PKCS8EncodedKeySpec(keyContent)
         val keyFactory = KeyFactory.getInstance("EC")
 
         return keyFactory.generatePrivate(keySpec)
 
     }
-
-
-
-
 
 }

@@ -1,6 +1,7 @@
 package com.be.shoackserver.presentation.controller
 
 import com.be.shoackserver.application.usecase.MessageUseCase
+import com.be.shoackserver.presentation.request.IdRequest
 import com.be.shoackserver.presentation.request.MessageRequest
 import lombok.extern.log4j.Log4j2
 import org.springframework.http.ResponseEntity
@@ -18,10 +19,10 @@ class MessageController(
 ) {
 
     @PostMapping("/message")
-    fun sendMessage(@RequestBody messageRequest: MessageRequest) : ResponseEntity<Void> {
+    fun sendMessage(@RequestBody idRequest: IdRequest) : ResponseEntity<Void> {
         messageUseCase.sendMessage(
-            messageRequest.destinationMemberId
-            ?: throw IllegalStateException("Destination member id is null"))
+            idRequest.id
+            ?: throw IllegalStateException("Destination member id must not be null"))
         return ResponseEntity.created(URI.create("/")).build()
     }
 }

@@ -11,6 +11,7 @@ class Member(
     var name: String? = null,
     var imageName: String? = null,
     var deviceToken: String? = null,
+    var appleRefreshToken: String? = null,
     var role: String? = null,
 
     @OneToMany(mappedBy = "subjectMember", cascade = [CascadeType.ALL])

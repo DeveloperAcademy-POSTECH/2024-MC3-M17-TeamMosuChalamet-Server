@@ -10,6 +10,7 @@ class MemberDto {
     var name: String? = null
     var imageName: String? = null
     var deviceToken: String? = null
+    var appleRefreshToken: String? = null
     var role: String? = null
 
     companion object {
@@ -20,6 +21,7 @@ class MemberDto {
             memberDto.name = member.name
             memberDto.imageName = member.imageName
             memberDto.deviceToken = member.deviceToken
+            memberDto.appleRefreshToken = member.appleRefreshToken
             memberDto.role = member.role
             return memberDto
         }

@@ -6,7 +6,7 @@ import java.security.PublicKey
 
 @Component
 class AppleOAuthUserProvider(
-    private val appleClient: AppleClientForPublicKey,
+    private val appleClient: AppleAuthClient,
     private val jwtParser: AppleJwtParser,
     private val publicKeyGenerator: PublicKeyGenerator,
     private val appleClaimsValidator: AppleClaimsValidator

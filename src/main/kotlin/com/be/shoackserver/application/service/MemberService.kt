@@ -51,6 +51,13 @@ class MemberService (
         member.deviceToken = deviceToken
     }
 
+    @Transactional
+    fun saveRefreshToken(memberId: Long, refreshToken: String) {
+        val member = memberRepository.findById(memberId)
+            .orElseThrow() { MemberNotFoundException(memberId) }
+        member.appleRefreshToken = refreshToken
+    }
+
     fun deleteMember(memberId: Long) {
         memberRepository.deleteById(memberId)
     }

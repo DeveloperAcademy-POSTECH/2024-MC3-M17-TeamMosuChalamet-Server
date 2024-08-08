@@ -1,7 +1,5 @@
 package com.be.shoackserver.appleSignin
 
-import java.security.MessageDigest
-
 class HashUtils {
 
     companion object {

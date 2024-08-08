@@ -16,7 +16,6 @@ import java.util.*
 class AppleJwtParser {
     companion object {
         private var objectMapper = jacksonObjectMapper()
-
     }
 
     fun parseHeaders(identityToken: String) : Map<String, String>  {
@@ -38,11 +37,11 @@ class AppleJwtParser {
                 .payload
 
         } catch (e: SignatureException) {
-            throw SecurityException("Invalid token signature", e)
+            throw SignatureException("Invalid Apple identity token signature", e)
         } catch (e: ExpiredJwtException){
-            throw SecurityException("Token expired", e)
+            throw ExpiredJwtException(null, null, "Apple identity token expired", e)
         } catch (e: Exception) {
-            throw IllegalArgumentException("Failed to parse identity token", e)
+            throw RuntimeException("Failed to parse identity token", e)
         }
 
     }
