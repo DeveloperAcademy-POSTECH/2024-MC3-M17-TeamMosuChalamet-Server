@@ -58,6 +58,8 @@ dependencies {
 
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
+    runtimeOnly("io.jsonwebtoken:jjwt-gson:0.12.3")
     runtimeOnly("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.6.3")
     runtimeOnly("com.h2database:h2")
     runtimeOnly ("com.mysql:mysql-connector-j")

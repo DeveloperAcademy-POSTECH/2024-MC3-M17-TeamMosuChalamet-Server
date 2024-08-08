@@ -21,7 +21,7 @@ class LoginFilter(
     private val memberManageUseCase: MemberManageUseCase
 ) : UsernamePasswordAuthenticationFilter() {
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication {
-        val identityToken = request.getParameter("identityToken")//obtainUsername(request)
+        val identityToken = request.getHeader("identityToken").split(" ")[1]
 
         // 애플 로그인 등장!
         val appleUserId = loginUseCase.signIn(identityToken)
@@ -33,12 +33,12 @@ class LoginFilter(
 
     override fun successfulAuthentication(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain, authResult: Authentication) {
         val customUserDetails = authResult.principal as CustomUserDetails
-        val name = customUserDetails.username
+        val memberId = customUserDetails.username.toLong()
         val role = customUserDetails.authorities.first().authority
 
         // jwt 생성
-        val accessToken = jwtUtil.generateToken("access", name, role, 30 * 24 * 60 * 60 * 1000L) // 30일
-        val refreshToken = jwtUtil.generateToken("refresh", name, role, 60 * 24 * 60 * 60 * 1000L) // 60일
+        val accessToken = jwtUtil.generateToken("access", memberId, role, 30 * 24 * 60 * 60 * 1000L) // 30일
+        val refreshToken = jwtUtil.generateToken("refresh", memberId, role, 60 * 24 * 60 * 60 * 1000L) // 60일
 
         response.addHeader("Access", "Bearer $accessToken")
         response.addHeader("Refresh", "Bearer $refreshToken")
@@ -51,18 +51,17 @@ class LoginFilter(
 
     override fun unsuccessfulAuthentication(request: HttpServletRequest, response: HttpServletResponse, failed: AuthenticationException) {
         // 회원정보 저장로직
-        val identityToken = request.getParameter("identityToken")
-        val name = request.getParameter("name")
-        val deviceToken = request.getParameter("deviceToken")
+        val identityToken = request.getHeader("identityToken").split(" ")[1]
+        val deviceToken = request.getHeader("deviceToken")
 
         // 애플 인증으로 appleUserId를 받아온다
         val appleUserId = loginUseCase.signIn(identityToken)
 
-        val memberDto = memberManageUseCase.addNewMember(appleUserId, name, deviceToken)
+        val memberDto = memberManageUseCase.addNewMember(appleUserId, "이름 없음", deviceToken)
 
         // jwt 생성
-        val accessToken = jwtUtil.generateToken("access", memberDto.id.toString(), memberDto.role!!,  24 * 60 * 60 * 1000L) // 1일
-        val refreshToken = jwtUtil.generateToken("refresh", memberDto.name!!, memberDto.role!!, 30 * 24 * 60 * 60 * 1000L) // 30일
+        val accessToken = jwtUtil.generateToken("access", memberDto.id!!, memberDto.role!!,  24 * 60 * 60 * 1000L) // 1일
+        val refreshToken = jwtUtil.generateToken("refresh", memberDto.id!!, memberDto.role!!, 30 * 24 * 60 * 60 * 1000L) // 30일
 
         response.addHeader("Access", "Bearer $accessToken")
         response.addHeader("Refresh", "Bearer $refreshToken")

@@ -31,4 +31,8 @@ class ProfileUseCase(
         memberService.updateMemberProfileImageName(imageName, getMemberId())
 
     }
+
+    fun updateProfileName(name: String) {
+        memberService.updateMemberName(name, getMemberId())
+    }
 }

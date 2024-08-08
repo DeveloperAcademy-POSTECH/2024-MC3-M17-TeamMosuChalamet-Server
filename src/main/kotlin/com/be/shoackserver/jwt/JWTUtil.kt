@@ -14,12 +14,12 @@ import javax.crypto.spec.SecretKeySpec
 class JWTUtil(@Value("\${jwt.secret}") secret: String) {
     private val secretKey: SecretKey = SecretKeySpec(secret.toByteArray(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().algorithm)
 
-    fun getUsername(token: String): String = Jwts.parser()
+    fun getMemberId(token: String): Long = Jwts.parser()
         .verifyWith(secretKey)
         .build()
         .parseSignedClaims(token)
         .payload
-        .get("username", String::class.java)
+        .get("memberId", Long::class.java)
 
     fun getRole(token: String): String = Jwts.parser()
         .verifyWith(secretKey)
@@ -46,9 +46,9 @@ class JWTUtil(@Value("\${jwt.secret}") secret: String) {
     /**
      * expiredMs = 토큰 유효시간
      */
-    fun generateToken(category: String,  username: String, role: String, expiredMs: Long): String = Jwts.builder()
+    fun generateToken(category: String,  memberId: Long, role: String, expiredMs: Long): String = Jwts.builder()
         .claim("category", category)
-        .claim("username", username)
+        .claim("username", memberId)
         .claim("role", role)
         .issuedAt(Date(System.currentTimeMillis()))
         .expiration(Date(System.currentTimeMillis() + expiredMs))

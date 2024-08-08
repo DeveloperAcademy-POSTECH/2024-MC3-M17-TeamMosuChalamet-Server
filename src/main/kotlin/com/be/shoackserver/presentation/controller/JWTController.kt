@@ -43,11 +43,11 @@ class JWTController(
                     return ResponseEntity.badRequest().body("Invalid refresh token")
                 }
 
-                val username = jwtUtil.getUsername(refreshToken)
+                val memberId = jwtUtil.getMemberId(refreshToken)
                 val role = jwtUtil.getRole(refreshToken)
 
-                val newAccessToken = jwtUtil.generateToken("access", username, role, 60 * 60 * 10 * 1000L) // 10시간
-                val newRefreshToken = jwtUtil.generateToken("refresh", username, role, 60 * 24 * 60 * 60 * 1000L) // 60일
+                val newAccessToken = jwtUtil.generateToken("access", memberId, role, 60 * 60 * 10 * 1000L) // 10시간
+                val newRefreshToken = jwtUtil.generateToken("refresh", memberId, role, 30 * 24 * 60 * 60 * 1000L) // 30일
 
                 // 헤더에 토큰을 실어 보내기
                 response.setHeader("Access", "Bearer $newAccessToken")

@@ -27,6 +27,13 @@ class MemberService (
         member.imageName = imageName
     }
 
+    @Transactional
+    fun updateMemberName(name: String, memberId: Long) {
+        val member = memberRepository.findById(memberId)
+            .orElseThrow() { MemberNotFoundException(memberId) }
+        member.name = name
+    }
+
     fun findDeviceTokenByMemberId(memberId: Long) : String {
         return memberRepository.findById(memberId)
             .orElseThrow() { MemberNotFoundException(memberId) }

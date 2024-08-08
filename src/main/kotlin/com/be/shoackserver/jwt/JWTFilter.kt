@@ -33,11 +33,11 @@ class JWTFilter(private val jwtUtil: JWTUtil) : OncePerRequestFilter() {
                     throw JwtException("Invalid access token category")
                 }
 
-                val username = jwtUtil.getUsername(accessToken)
+                val memberId = jwtUtil.getMemberId(accessToken)
                 val role = jwtUtil.getRole(accessToken)
 
                 val member = Member().apply {
-                    this.id = username.toLong()
+                    this.id = memberId
                     this.role = role
                 }
 

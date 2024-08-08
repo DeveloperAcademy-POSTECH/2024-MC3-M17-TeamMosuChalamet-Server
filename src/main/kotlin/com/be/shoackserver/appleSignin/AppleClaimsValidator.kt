@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class AppleClaimsValidator(
-    @Value("\${oauth.apple.iss}") private val iss: String, // 토큰 발행자: https://appleid.apple.com
+    @Value("\${oauth.apple.endpoint}") private val iss: String, // 토큰 발행자: https://appleid.apple.com
     @Value("\${oauth.apple.client-id}") private val clientId: String, // 클라이언트 ID: 앱의 번들 ID
     @Value("\${oauth.apple.nonce}") private val nonce: String, // 클라이언트에서 생성한 nonce
 ) {
