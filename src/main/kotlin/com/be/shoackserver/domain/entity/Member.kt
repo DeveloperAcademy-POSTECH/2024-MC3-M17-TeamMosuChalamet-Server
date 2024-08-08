@@ -11,7 +11,14 @@ class Member(
     var name: String? = null,
     var imageName: String? = null,
     var deviceToken: String? = null,
-    var role: String? = null
+    var role: String? = null,
+
+    @OneToMany(mappedBy = "subjectMember", cascade = [CascadeType.ALL])
+    var friendshipsAsSubject: MutableList<Friendship> = mutableListOf(),
+
+    @OneToMany(mappedBy = "objectMember", cascade = [CascadeType.ALL])
+    var friendshipsAsObject: MutableList<Friendship> = mutableListOf()
+
 ) : BaseEntity() {
 
     @Id
