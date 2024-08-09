@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class MemberManageUseCase(
-    @Value("\${oauth.apple.client-id}") private val clientId: String,
     private val memberService: MemberService,
     private val appleAuthService: AppleAuthService,
     private val authenticationService: AuthenticationService
