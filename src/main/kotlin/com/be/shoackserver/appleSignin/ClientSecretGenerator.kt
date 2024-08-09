@@ -26,38 +26,27 @@ class ClientSecretGenerator(
     @Value("\${oauth.apple.p8-key-name}") private val keyName: String,
     @Value("\${oauth.apple.p8-key}") private val privateKey: String
 ) {
-    private val SIX_MONTHS_IN_MILLISECONDS = 1L * 30 * 24 * 60 * 60 * 1000
+    private val ONE_MONTH_IN_MILLISECONDS = 1L * 30 * 24 * 60 * 60 * 1000
 
-    fun generate() = Jwts.builder()
+    fun generate() : String = Jwts.builder()
         .header()
         .add("alg", "ES256")
         .add("kid", keyId)
         .and()
         .issuer(teamId)
         .issuedAt(Date(System.currentTimeMillis()))
-        .expiration(Date(System.currentTimeMillis() + SIX_MONTHS_IN_MILLISECONDS))
+        .expiration(Date(System.currentTimeMillis() + ONE_MONTH_IN_MILLISECONDS))
         .audience().add(endpoint).and()
         .subject(clientId)
         .signWith(loadPrivateKey(privateKey), Jwts.SIG.ES256)
         .compact()
 
-    private fun loadPrivateKey(privateKey: String): PrivateKey {
-//        val resource = ClassPathResource(filename)
-//        val keyBytes = resource.inputStream.readAllBytes()
+    private fun loadPrivateKey(privateKey: String) : PrivateKey {
         val keyContent = Base64.getDecoder().decode(privateKey)
         val keySpec =  PKCS8EncodedKeySpec(keyContent)
         val keyFactory = KeyFactory.getInstance("EC")
 
-//        val resource = ClassPathResource(keyName)
-//        val privateKey = String(Files.readAllBytes(Paths.get(resource.uri)))
-//        val pemReader: Reader = StringReader(privateKey)
-//        val pemParser: PEMParser = PEMParser(pemReader)
-//        val converter: JcaPEMKeyConverter = JcaPEMKeyConverter()
-//        val privateKeyInfo : PrivateKeyInfo = pemParser.readObject() as PrivateKeyInfo
-
         return keyFactory.generatePrivate(keySpec)
-        //return converter.getPrivateKey(privateKeyInfo)
-
     }
 
 }

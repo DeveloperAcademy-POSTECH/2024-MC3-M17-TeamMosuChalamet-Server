@@ -2,7 +2,6 @@ package com.be.shoackserver.presentation.controller
 
 import com.be.shoackserver.application.usecase.MessageUseCase
 import com.be.shoackserver.presentation.request.IdRequest
-import com.be.shoackserver.presentation.request.MessageRequest
 import lombok.extern.log4j.Log4j2
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping

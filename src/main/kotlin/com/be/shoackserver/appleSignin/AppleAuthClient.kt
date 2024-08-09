@@ -19,7 +19,6 @@ interface AppleAuthClient {
     fun revokeAppleToken(appleSignInRevokeRequest: AppleSignInRevokeRequest)
 }
 
-@Data
 data class AppleTokenRequest(
     var client_id: String,
     var client_secret: String,

@@ -61,4 +61,11 @@ class MemberService (
     fun deleteMember(memberId: Long) {
         memberRepository.deleteById(memberId)
     }
+
+    @Transactional
+    fun deleteDeviceToken(memberId: Long) {
+        val member = memberRepository.findById(memberId)
+            .orElseThrow() { MemberNotFoundException(memberId) }
+        member.deviceToken = null
+    }
 }

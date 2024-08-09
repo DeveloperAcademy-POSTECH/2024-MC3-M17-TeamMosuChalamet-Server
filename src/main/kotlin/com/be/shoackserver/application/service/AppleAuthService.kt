@@ -13,14 +13,11 @@ class AppleAuthService(
 ) {
 
     fun getAppleTokens(authorizationCode: String) : AppleTokenResponse {
-        println("getAppleTokens start")
         val clientSecret = clientSecretGenerator.generate()
         val appleTokenRequest = AppleTokenRequest(clientId, clientSecret, authorizationCode, "authorization_code")
-        val appleTokenRequestJson = Gson().toJson(appleTokenRequest)
         val appleTokenResponse = appleClient.getAppleTokens(appleTokenRequest)
 
-
-        return appleTokenResponse.body ?: throw Exception("Failed to get apple tokens")
+        return appleTokenResponse.body ?: throw RuntimeException("Failed to get apple tokens")
     }
 
     fun requestToRevokeAppleToken(refreshToken: String) {
@@ -36,7 +33,7 @@ class AppleAuthService(
             ) // Apple 서버에 회원 탈퇴 요청
         } catch (e: Exception) {
             // Apple 서버에 회원 탈퇴 요청 실패 시
-            throw Exception("Failed to revoke apple token")
+            throw RuntimeException("Failed to revoke apple token")
         }
     }
 }

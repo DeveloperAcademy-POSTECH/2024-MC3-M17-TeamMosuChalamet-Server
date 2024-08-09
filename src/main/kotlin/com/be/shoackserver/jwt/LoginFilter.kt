@@ -32,7 +32,7 @@ class LoginFilter(
     }
 
     override fun successfulAuthentication(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain, authResult: Authentication) {
-        val authorizationCode = request.getHeader("Authorization-Code")
+        val authorizationCode = request.getHeader("Authorization-Code") ?: throw IllegalArgumentException("Authorization-Code is null")
 
         val customUserDetails = authResult.principal as CustomUserDetails
         val memberId = customUserDetails.username.toLong()
@@ -56,9 +56,10 @@ class LoginFilter(
 
     override fun unsuccessfulAuthentication(request: HttpServletRequest, response: HttpServletResponse, failed: AuthenticationException) {
         // 회원정보 저장로직
-        val identityToken = request.getHeader("Identity-Token").split(" ")[1]
-        val deviceToken = request.getHeader("Device-Token")
-        val authorizationCode = request.getHeader("Authorization-Code")
+        val identityTokenHeader = request.getHeader("Identity-Token") ?: throw IllegalArgumentException("Identity-Token is null")
+        val identityToken = identityTokenHeader.split(" ")[1]
+        val deviceToken = request.getHeader("Device-Token") ?: throw IllegalArgumentException("Device-Token is null")
+        val authorizationCode = request.getHeader("Authorization-Code") ?: throw IllegalArgumentException("Authorization-Code is null")
 
         // 애플 인증으로 appleUserId를 받아온다
         val appleUserId = loginUseCase.signIn(identityToken)

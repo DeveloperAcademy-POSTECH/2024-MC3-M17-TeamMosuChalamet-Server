@@ -41,6 +41,7 @@ class SecurityConfig(
             .csrf { it.disable() }
             .formLogin { it.disable() }
             .httpBasic { it.disable() }
+            .logout { it.disable() }
             .authorizeRequests { authorize ->
                 authorize
                     .requestMatchers("/login", "/api/reissue").permitAll()

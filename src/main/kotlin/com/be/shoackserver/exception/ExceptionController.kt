@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest
 import lombok.extern.log4j.Log4j2
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.HttpRequestMethodNotSupportedException
 
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -43,7 +44,7 @@ class ExceptionController {
     }
 
     @ExceptionHandler(RuntimeException::class)
-    fun handleGlobalException(e: RuntimeException, request: HttpServletRequest) : ResponseEntity<ErrorResponse> {
+    fun handleRuntimeException(e: RuntimeException, request: HttpServletRequest) : ResponseEntity<ErrorResponse> {
         val errorDetail = ErrorResponse(
             LocalDateTime.now().format(dateFormatter),
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
@@ -56,7 +57,7 @@ class ExceptionController {
     }
 
     @ExceptionHandler(NoHandlerFoundException::class)
-    fun handleGlobalException(e: NoHandlerFoundException, request: HttpServletRequest) : ResponseEntity<ErrorResponse> {
+    fun handleNotFoundException(e: NoHandlerFoundException, request: HttpServletRequest) : ResponseEntity<ErrorResponse> {
         val errorDetail = ErrorResponse(
             LocalDateTime.now().format(dateFormatter),
             HttpStatus.NOT_FOUND.value(),
@@ -66,6 +67,19 @@ class ExceptionController {
             request.requestURI
         )
         return ResponseEntity(errorDetail, HttpStatus.NOT_FOUND)
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
+    fun handleMethodNotAllowedException(e: HttpRequestMethodNotSupportedException, request: HttpServletRequest) : ResponseEntity<ErrorResponse> {
+        val errorDetail = ErrorResponse(
+            LocalDateTime.now().format(dateFormatter),
+            HttpStatus.METHOD_NOT_ALLOWED.value(),
+            HttpStatus.METHOD_NOT_ALLOWED.name,
+            e.stackTraceToString(),
+            e.message ?: "error message not defined",
+            request.requestURI
+        )
+        return ResponseEntity(errorDetail, HttpStatus.METHOD_NOT_ALLOWED)
     }
 
     @ExceptionHandler(Exception::class)
