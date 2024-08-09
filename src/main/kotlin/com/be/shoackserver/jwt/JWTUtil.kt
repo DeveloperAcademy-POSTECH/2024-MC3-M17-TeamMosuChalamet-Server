@@ -19,7 +19,7 @@ class JWTUtil(@Value("\${jwt.secret}") secret: String) {
         .build()
         .parseSignedClaims(token)
         .payload
-        .get("memberId", Long::class.java)
+        .get("memberId", String::class.java).toLong()
 
     fun getRole(token: String): String = Jwts.parser()
         .verifyWith(secretKey)
@@ -48,7 +48,7 @@ class JWTUtil(@Value("\${jwt.secret}") secret: String) {
      */
     fun generateToken(category: String,  memberId: Long, role: String, expiredMs: Long): String = Jwts.builder()
         .claim("category", category)
-        .claim("username", memberId)
+        .claim("memberId", memberId.toString())
         .claim("role", role)
         .issuedAt(Date(System.currentTimeMillis()))
         .expiration(Date(System.currentTimeMillis() + expiredMs))

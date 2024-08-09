@@ -77,18 +77,18 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
             response.contentType = "application/json"
             response.writer.write(jsonMapper().writeValueAsString(errorDetails))
 
-//        } catch (e: Exception) {
-//            val errorDetails = ErrorResponse(
-//                LocalDateTime.now().format(dateFormatter),
-//                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-//                HttpStatus.INTERNAL_SERVER_ERROR.name,
-//                e.stackTraceToString(),
-//                e.message ?: "error message not defined",
-//                request.requestURI
-//            )
-//            response.status = HttpStatus.INTERNAL_SERVER_ERROR.value()
-//            response.contentType = "application/json"
-//            response.writer.write(jsonMapper().writeValueAsString(errorDetails))
+        } catch (e: Exception) {
+            val errorDetails = ErrorResponse(
+                LocalDateTime.now().format(dateFormatter),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.name,
+                e.stackTraceToString(),
+                e.message ?: "error message not defined",
+                request.requestURI
+            )
+            response.status = HttpStatus.INTERNAL_SERVER_ERROR.value()
+            response.contentType = "application/json"
+            response.writer.write(jsonMapper().writeValueAsString(errorDetails))
         }
     }
 }
