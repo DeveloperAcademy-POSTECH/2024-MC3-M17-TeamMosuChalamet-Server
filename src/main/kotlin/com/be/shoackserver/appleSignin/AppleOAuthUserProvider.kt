@@ -11,7 +11,7 @@ class AppleOAuthUserProvider(
     private val publicKeyGenerator: PublicKeyGenerator,
     private val appleClaimsValidator: AppleClaimsValidator
 ) {
-    fun getAppleOAuthUser(identityToken : String) : String{
+    fun getAppleOAuthUser(identityToken : String, userAgent: String) : String{
         // 1. identity token 받아오기 -> 완료
         // 2. 애플 공개키 목록 받아오기
         appleClient.getApplePublicKeys()
@@ -22,7 +22,7 @@ class AppleOAuthUserProvider(
         // 5. 새로운 공개키로 identity token을 검증하고 payload 가져오기
         val claims : Claims =  jwtParser.parsePublicKeyAndGetClaims(identityToken, publicKey)
         // 6. payload의 클레임 검증하기
-        if(!appleClaimsValidator.validate(claims)){
+        if(!appleClaimsValidator.validate(claims, userAgent)){
             throw RuntimeException("Apple claims validation failed")
         }
 

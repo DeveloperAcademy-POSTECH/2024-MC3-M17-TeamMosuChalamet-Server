@@ -23,8 +23,11 @@ class LoginFilter(
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication {
         val identityToken = request.getHeader("Identity-Token").split(" ")[1]
 
+        val userAgentHeader = request.getHeader("User-Agent") ?: throw IllegalArgumentException("User-Agent is null")
+        val userAgent = userAgentHeader.contains("AppClip").let { if (it) "appClip" else "app" }
+
         // 애플 로그인 등장!
-        val appleUserId = loginUseCase.signIn(identityToken)
+        val appleUserId = loginUseCase.signIn(identityToken, userAgent)
         // 애플 고유 아이디를 세션에 담아두고 싶진 않다..
         val authenticationToken = UsernamePasswordAuthenticationToken(appleUserId, "uotp", null)
 
@@ -34,12 +37,15 @@ class LoginFilter(
     override fun successfulAuthentication(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain, authResult: Authentication) {
         val authorizationCode = request.getHeader("Authorization-Code") ?: throw IllegalArgumentException("Authorization-Code is null")
 
+        val userAgentHeader = request.getHeader("User-Agent") ?: throw IllegalArgumentException("User-Agent is null")
+        val userAgent = userAgentHeader.contains("AppClip").let { if (it) "appClip" else "app" }
+
         val customUserDetails = authResult.principal as CustomUserDetails
         val memberId = customUserDetails.username.toLong()
         val role = customUserDetails.authorities.first().authority
 
         // refresh token 저장
-        memberManageUseCase.saveAppleRefreshToken(memberId, authorizationCode)
+        memberManageUseCase.saveAppleRefreshToken(memberId, authorizationCode, userAgent)
 
         // jwt 생성
         val accessToken = jwtUtil.generateToken("access", memberId, role, 30 * 24 * 60 * 60 * 1000L) // 30일
@@ -61,13 +67,17 @@ class LoginFilter(
         val deviceToken = request.getHeader("Device-Token") ?: throw IllegalArgumentException("Device-Token is null")
         val authorizationCode = request.getHeader("Authorization-Code") ?: throw IllegalArgumentException("Authorization-Code is null")
 
+        // 메서드로 만들기
+        val userAgentHeader = request.getHeader("User-Agent") ?: throw IllegalArgumentException("User-Agent is null")
+        val userAgent = userAgentHeader.contains("AppClip").let { if (it) "appClip" else "app" }
+
         // 애플 인증으로 appleUserId를 받아온다
-        val appleUserId = loginUseCase.signIn(identityToken)
+        val appleUserId = loginUseCase.signIn(identityToken, userAgent)
 
         val memberDto = memberManageUseCase.addNewMember(appleUserId, "이름 없음", deviceToken)
 
         // refresh token 저장
-        memberManageUseCase.saveAppleRefreshToken(memberDto.id ?: throw IllegalArgumentException("Member id is null"), authorizationCode)
+        memberManageUseCase.saveAppleRefreshToken(memberDto.id ?: throw IllegalArgumentException("Member id is null"), authorizationCode, userAgent)
 
         // jwt 생성
         val accessToken = jwtUtil.generateToken("access", memberDto.id!!, memberDto.role!!,  24 * 60 * 60 * 1000L) // 1일

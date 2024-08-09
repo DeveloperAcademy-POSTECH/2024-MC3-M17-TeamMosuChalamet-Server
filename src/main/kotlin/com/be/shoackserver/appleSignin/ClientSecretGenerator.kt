@@ -1,16 +1,8 @@
 package com.be.shoackserver.appleSignin
 
 import io.jsonwebtoken.Jwts
-import org.bouncycastle.asn1.pkcs.PrivateKeyInfo
-import org.bouncycastle.openssl.PEMParser
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Component
-import java.io.Reader
-import java.io.StringReader
-import java.nio.file.Files
-import java.nio.file.Paths
 import java.security.KeyFactory
 import java.security.PrivateKey
 import java.security.spec.PKCS8EncodedKeySpec
@@ -21,14 +13,13 @@ import java.util.*
 class ClientSecretGenerator(
     @Value("\${oauth.apple.key-id}") private val keyId: String,
     @Value("\${oauth.apple.team-id}") private val teamId: String,
-    @Value("\${oauth.apple.client-id}") private val clientId: String,
     @Value("\${oauth.apple.endpoint}") private val endpoint: String,
     @Value("\${oauth.apple.p8-key-name}") private val keyName: String,
     @Value("\${oauth.apple.p8-key}") private val privateKey: String
 ) {
     private val ONE_MONTH_IN_MILLISECONDS = 1L * 30 * 24 * 60 * 60 * 1000
 
-    fun generate() : String = Jwts.builder()
+    fun generate(clientId: String) : String = Jwts.builder()
         .header()
         .add("alg", "ES256")
         .add("kid", keyId)

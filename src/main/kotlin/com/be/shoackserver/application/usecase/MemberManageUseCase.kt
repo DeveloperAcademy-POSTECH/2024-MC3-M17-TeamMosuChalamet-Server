@@ -33,14 +33,15 @@ class MemberManageUseCase(
         memberService.updateMemberDeviceToken(getMemberId(), deviceToken)
     }
 
-    fun saveAppleRefreshToken(memberId: Long, authorizationCode: String) {
-        memberService.saveRefreshToken(memberId, appleAuthService.getAppleTokens(authorizationCode).refresh_token)
+    fun saveAppleRefreshToken(memberId: Long, authorizationCode: String, userAgent: String) {
+        // 헤더에 user agent
+        memberService.saveRefreshToken(memberId, appleAuthService.getAppleTokens(authorizationCode, userAgent).refresh_token)
     }
 
-    fun deleteMember() {
+    fun deleteMember(userAgent: String) {
         val memberDto = MemberDto.of(memberService.getMember(getMemberId()))
         val refreshToken = memberDto.appleRefreshToken ?: throw IllegalArgumentException("refreshToken is null")
-        appleAuthService.requestToRevokeAppleToken(refreshToken) // Apple 서버에 회원 탈퇴 요청
+        appleAuthService.requestToRevokeAppleToken(refreshToken, userAgent) // Apple 서버에 회원 탈퇴 요청
         memberService.deleteMember(getMemberId()) // DB 에서 회원 삭제
     }
 }

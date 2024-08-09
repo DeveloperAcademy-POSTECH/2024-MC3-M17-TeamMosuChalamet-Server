@@ -19,8 +19,8 @@ class LoginUseCase(
         return authenticationService.getMemberIdFromSecurityContext()
     }
 
-    fun signIn(identityToken: String) : String{
-        return appleOAuthUserProvider.getAppleOAuthUser(identityToken)
+    fun signIn(identityToken: String, userAgent: String) : String{
+        return appleOAuthUserProvider.getAppleOAuthUser(identityToken, userAgent)
     }
 
     fun signOut(request: HttpServletRequest) {
