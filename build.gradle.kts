@@ -52,6 +52,9 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-config")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("io.jsonwebtoken:jjwt:0.12.3")
+    // https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk15on
+    implementation("org.bouncycastle:bcpkix-jdk15on:1.70")
+
 
     implementation("com.eatthepath:pushy:0.15.4")
     implementation("com.google.code.gson:gson:2.10.1")
