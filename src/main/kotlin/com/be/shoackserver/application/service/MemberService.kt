@@ -68,4 +68,13 @@ class MemberService (
             .orElseThrow() { MemberNotFoundException(memberId) }
         member.deviceToken = null
     }
+
+    // user agent 저장
+    @Transactional
+    fun saveUserAgent(memberId: Long, userAgent: String) {
+        val member = memberRepository.findById(memberId)
+            .orElseThrow() { MemberNotFoundException(memberId) }
+
+        member.userAgent = userAgent
+    }
 }

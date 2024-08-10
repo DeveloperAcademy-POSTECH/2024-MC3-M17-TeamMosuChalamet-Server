@@ -21,13 +21,14 @@ import java.util.concurrent.ExecutionException
 @Service
 class MessageService(
     private val apnsClient: ApnsClient,
-    @Value("\${oauth.apple.client-id}") private val topic: String,
     @Value("\${oauth.apple.watch-client-id}") private val watchBundleId: String
 ) {
     fun sendPushNotification(
         memberDto: MemberDto,
-        destinationDeviceToken: String
+        destinationDeviceToken: String,
+        topic: String
     ) {
+
         // SimpleApnsPayloadBuilder를 사용하여 Gson or Jackson 기반으로 payload 생성
         val payloadBuilder: ApnsPayloadBuilder = SimpleApnsPayloadBuilder()
         payloadBuilder.setAlertTitle(memberDto.name) // 송신자의 이름
@@ -42,6 +43,7 @@ class MessageService(
 
         val payload = payloadBuilder.build()
         val token = TokenUtil.sanitizeTokenString(destinationDeviceToken)
+
         val pushNotification = SimpleApnsPushNotification(token, topic, payload)
 
         /*

@@ -44,4 +44,8 @@ class MemberManageUseCase(
         appleAuthService.requestToRevokeAppleToken(refreshToken, userAgent) // Apple 서버에 회원 탈퇴 요청
         memberService.deleteMember(getMemberId()) // DB 에서 회원 삭제
     }
+
+    fun saveUserAgent(memberId: Long, userAgent: String) {
+        memberService.saveUserAgent(memberId, userAgent)
+    }
 }

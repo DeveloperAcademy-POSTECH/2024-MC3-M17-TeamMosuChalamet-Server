@@ -44,6 +44,9 @@ class LoginFilter(
         val memberId = customUserDetails.username.toLong()
         val role = customUserDetails.authorities.first().authority
 
+        // user agent 저장
+        memberManageUseCase.saveUserAgent(memberId, userAgent)
+
         // refresh token 저장
         memberManageUseCase.saveAppleRefreshToken(memberId, authorizationCode, userAgent)
 
@@ -75,6 +78,9 @@ class LoginFilter(
         val appleUserId = loginUseCase.signIn(identityToken, userAgent)
 
         val memberDto = memberManageUseCase.addNewMember(appleUserId, "이름 없음", deviceToken)
+
+        // user agent 저장
+        memberManageUseCase.saveUserAgent(memberDto.id ?: throw IllegalArgumentException("Member id is null"), userAgent)
 
         // refresh token 저장
         memberManageUseCase.saveAppleRefreshToken(memberDto.id ?: throw IllegalArgumentException("Member id is null"), authorizationCode, userAgent)
