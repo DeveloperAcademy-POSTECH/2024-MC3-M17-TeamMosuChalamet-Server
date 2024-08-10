@@ -8,15 +8,19 @@ import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import lombok.extern.log4j.Log4j2
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import org.springframework.http.HttpStatus
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.filter.OncePerRequestFilter
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.log
 
 @Log4j2
 class ExceptionHandlerFilter : OncePerRequestFilter() {
     private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    private val logger: Logger = LogManager.getLogger(ExceptionController::class.java)
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -36,6 +40,8 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
                 request.requestURI
             )
 
+            logger.error("HttpRequestMethodNotSupportedException: ${errorDetails.message}")
+
             response.status = HttpStatus.METHOD_NOT_ALLOWED.value()
             response.contentType = "application/json"
             response.writer.write(jsonMapper().writeValueAsString(errorDetails))
@@ -51,6 +57,8 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
                 request.requestURI
             )
 
+            logger.error("IllegalArgumentException: ${errorDetails.message}")
+
             response.status = HttpStatus.BAD_REQUEST.value()
             response.contentType = "application/json"
             response.writer.write(jsonMapper().writeValueAsString(errorDetails))
@@ -65,6 +73,8 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
                 request.requestURI
             )
 
+            logger.error("ExpiredJwtException: ${errorDetails.message}")
+
             response.status = HttpStatus.UNAUTHORIZED.value()
             response.contentType = "application/json"
             response.writer.write(jsonMapper().writeValueAsString(errorDetails))
@@ -78,6 +88,8 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
                 e.message ?: "error message not defined",
                 request.requestURI
             )
+
+            logger.error("SignatureException: ${errorDetails.message}")
 
             response.status = HttpStatus.UNAUTHORIZED.value()
             response.contentType = "application/json"
@@ -94,6 +106,8 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
                 request.requestURI
             )
 
+            logger.error("JwtException: ${errorDetails.message}")
+
             response.status = HttpStatus.UNAUTHORIZED.value()
             response.contentType = "application/json"
             response.writer.write(jsonMapper().writeValueAsString(errorDetails))
@@ -108,6 +122,8 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
                 request.requestURI
             )
 
+            logger.error("AccessDeniedException: ${errorDetails.message}")
+
             response.status = HttpStatus.FORBIDDEN.value()
             response.contentType = "application/json"
             response.writer.write(jsonMapper().writeValueAsString(errorDetails))
@@ -121,6 +137,8 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
                 e.message ?: "error message not defined",
                 request.requestURI
             )
+
+            logger.error("Exception: ${errorDetails.message}")
 
             response.status = HttpStatus.INTERNAL_SERVER_ERROR.value()
             response.contentType = "application/json"

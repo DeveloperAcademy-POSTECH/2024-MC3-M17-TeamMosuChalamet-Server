@@ -50,7 +50,7 @@ class MemberController(
     fun deleteMember(request: HttpServletRequest) : ResponseEntity<Void> {
 
         val userAgentHeader = request.getHeader("User-Agent") ?: throw IllegalArgumentException("User-Agent is null")
-        val userAgent = userAgentHeader.contains("appClip").let { if (it) "appClip" else "app" }
+        val userAgent = userAgentHeader.contains("AppClip").let { if (it) "appClip" else "app" }
 
         memberManageUseCase.deleteMember(userAgent)
         return ResponseEntity.ok().build()
