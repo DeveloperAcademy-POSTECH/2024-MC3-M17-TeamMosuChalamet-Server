@@ -2,6 +2,7 @@ package com.be.shoackserver.config
 
 import com.be.shoackserver.application.usecase.LoginUseCase
 import com.be.shoackserver.application.usecase.MemberManageUseCase
+import com.be.shoackserver.domain.repository.RefreshRepository
 import com.be.shoackserver.exception.ExceptionHandlerFilter
 import com.be.shoackserver.jwt.JWTFilter
 import com.be.shoackserver.jwt.JWTUtil
@@ -23,7 +24,8 @@ class SecurityConfig(
     private val authenticationConfiguration: AuthenticationConfiguration,
     private val jwtUtil: JWTUtil,
     private val loginUseCase: LoginUseCase,
-    private val memberManageUseCase: MemberManageUseCase
+    private val memberManageUseCase: MemberManageUseCase,
+    private val refreshRepository: RefreshRepository
 ) {
 
     @Bean

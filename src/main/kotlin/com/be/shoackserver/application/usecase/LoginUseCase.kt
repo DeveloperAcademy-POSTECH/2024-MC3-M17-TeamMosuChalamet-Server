@@ -26,6 +26,7 @@ class LoginUseCase(
     fun signOut(request: HttpServletRequest) {
         // refreshToken 무효화 시키기
         val refreshToken = request.getHeader("Refresh") ?: throw IllegalArgumentException("Refresh Token is null")
+        authenticationService.deleteRefreshEntity(refreshToken)
         // 디바이스 토큰 DB에서 삭제
         memberService.deleteDeviceToken(getMemberId())
     }

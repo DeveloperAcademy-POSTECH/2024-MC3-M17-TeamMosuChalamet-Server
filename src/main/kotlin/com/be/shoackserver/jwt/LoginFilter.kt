@@ -3,6 +3,8 @@ package com.be.shoackserver.jwt
 import com.be.shoackserver.application.dto.CustomUserDetails
 import com.be.shoackserver.application.usecase.LoginUseCase
 import com.be.shoackserver.application.usecase.MemberManageUseCase
+import com.be.shoackserver.domain.entity.RefreshEntity
+import com.be.shoackserver.domain.repository.RefreshRepository
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -12,14 +14,19 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import java.util.*
 
 @Log4j2
 class LoginFilter(
     private val authenticationManager: AuthenticationManager,
     private val jwtUtil: JWTUtil,
     private val loginUseCase: LoginUseCase,
-    private val memberManageUseCase: MemberManageUseCase
+    private val memberManageUseCase: MemberManageUseCase,
 ) : UsernamePasswordAuthenticationFilter() {
+
+    private val ACCESSTOKEN_EXPIRED_MS = 24 * 60 * 60 * 1000L // 1일
+    private val REFRESHTOKEN_EXPIRED_MS = 30 * 24 * 60 * 60 * 1000L // 30일
+
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication {
         val identityToken = request.getHeader("Identity-Token").split(" ")[1]
 
@@ -51,8 +58,10 @@ class LoginFilter(
         memberManageUseCase.saveAppleRefreshToken(memberId, authorizationCode, userAgent)
 
         // jwt 생성
-        val accessToken = jwtUtil.generateToken("access", memberId, role, 30 * 24 * 60 * 60 * 1000L) // 30일
-        val refreshToken = jwtUtil.generateToken("refresh", memberId, role, 60 * 24 * 60 * 60 * 1000L) // 60일
+        val accessToken = jwtUtil.generateToken("access", memberId, role, ACCESSTOKEN_EXPIRED_MS)
+        val refreshToken = jwtUtil.generateToken("refresh", memberId, role, REFRESHTOKEN_EXPIRED_MS)
+
+        memberManageUseCase.addRefreshToken(refreshToken, memberId, REFRESHTOKEN_EXPIRED_MS) // refresh token 저장
 
         response.addHeader("Access", "Bearer $accessToken")
         response.addHeader("Refresh", "Bearer $refreshToken")
@@ -84,13 +93,16 @@ class LoginFilter(
         memberManageUseCase.saveAppleRefreshToken(memberDto.id ?: throw IllegalArgumentException("Member id is null"), authorizationCode, userAgent)
 
         // jwt 생성
-        val accessToken = jwtUtil.generateToken("access", memberDto.id!!, memberDto.role!!,  24 * 60 * 60 * 1000L) // 1일
-        val refreshToken = jwtUtil.generateToken("refresh", memberDto.id!!, memberDto.role!!, 30 * 24 * 60 * 60 * 1000L) // 30일
+        val accessToken = jwtUtil.generateToken("access", memberDto.id!!, memberDto.role!!,  ACCESSTOKEN_EXPIRED_MS) // 1일
+        val refreshToken = jwtUtil.generateToken("refresh", memberDto.id!!, memberDto.role!!, REFRESHTOKEN_EXPIRED_MS) // 30일
+
+        memberManageUseCase.addRefreshToken(refreshToken, memberDto.id!!, REFRESHTOKEN_EXPIRED_MS) // refresh token 저장
 
         response.addHeader("Access", "Bearer $accessToken")
         response.addHeader("Refresh", "Bearer $refreshToken")
 
         response.status = 201
     }
+
 }
 
