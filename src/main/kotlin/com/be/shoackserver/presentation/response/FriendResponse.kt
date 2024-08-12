@@ -3,7 +3,6 @@ package com.be.shoackserver.presentation.response
 import com.be.shoackserver.application.dto.MemberDto
 
 class FriendResponse {
-
     var id: Long? = null
     var name : String? = null
     var imageURL : String? = null

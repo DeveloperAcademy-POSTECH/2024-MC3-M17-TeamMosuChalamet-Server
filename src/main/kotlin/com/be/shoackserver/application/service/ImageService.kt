@@ -42,8 +42,7 @@ class ImageService(
     }
 
     fun deleteImage(category: String, fileName: String) {
-        val filePath = generatePath(category, fileName)
-        amazonS3Client.deleteObject(bucket, filePath)
+        amazonS3Client.deleteObject(bucket, generatePath(category, fileName))
     }
 
     fun generatePath(category: String, fileName: String): String {

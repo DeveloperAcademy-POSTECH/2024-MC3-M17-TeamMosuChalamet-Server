@@ -10,5 +10,6 @@ import org.springframework.stereotype.Repository
 interface FriendshipRepository : JpaRepository<Friendship, Long> {
     fun findAllBySubjectMember(member: Member): List<Friendship>
     fun findAllByObjectMember(member: Member): List<Friendship>
-
+    fun existsBySubjectMemberAndObjectMember(subjectMember: Member, objectMember: Member): Boolean
+    fun findBySubjectMemberAndObjectMember(subjectMember: Member, objectMember: Member): Friendship?
 }
