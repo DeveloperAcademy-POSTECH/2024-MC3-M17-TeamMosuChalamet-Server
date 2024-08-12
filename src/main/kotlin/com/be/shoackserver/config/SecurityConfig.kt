@@ -6,7 +6,6 @@ import com.be.shoackserver.exception.ExceptionHandlerFilter
 import com.be.shoackserver.jwt.JWTFilter
 import com.be.shoackserver.jwt.JWTUtil
 import com.be.shoackserver.jwt.LoginFilter
-import lombok.extern.log4j.Log4j2
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -18,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
-@Log4j2
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(

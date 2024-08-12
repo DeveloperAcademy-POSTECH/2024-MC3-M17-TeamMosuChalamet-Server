@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
-@Log4j2
 @RestController
 @RequestMapping("/api")
 class MessageController(

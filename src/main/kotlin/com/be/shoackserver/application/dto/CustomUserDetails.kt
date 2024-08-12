@@ -1,7 +1,6 @@
 package com.be.shoackserver.application.dto
 
 import com.be.shoackserver.domain.entity.Member
-import lombok.RequiredArgsConstructor
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder

@@ -1,8 +1,7 @@
 package com.be.shoackserver.application.service
 
 import com.be.shoackserver.appleSignin.*
-import com.google.gson.Gson
-import org.eclipse.jgit.transport.UserAgent
+import org.apache.logging.log4j.LogManager
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
@@ -13,6 +12,7 @@ class AppleAuthService(
     private val clientSecretGenerator: ClientSecretGenerator,
     private val appleClient: AppleAuthClient
 ) {
+    private val log = LogManager.getLogger(AppleAuthService::class.java)
 
     fun getAppleTokens(authorizationCode: String, userAgent: String) : AppleTokenResponse {
 
@@ -34,38 +34,37 @@ class AppleAuthService(
     }
 
     fun requestToRevokeAppleToken(refreshToken: String, userAgent: String) {
+        log.info("Attempting to revoke Apple token")
 
         when (userAgent) {
             "appClip" -> {
                 try {
                     val clientSecret = clientSecretGenerator.generate(appClipClientId)
-                    appleClient.revokeAppleToken(
-                        AppleSignInRevokeRequest(
-                            appClipClientId,
-                            clientSecret,
-                            refreshToken,
-                            "refresh_token"
-                        )
-                    ) // Apple 서버에 회원 탈퇴 요청
+                    log.info("finished to generate client secret for appClip")
+                    val response = appleClient.revokeAppleToken(AppleRevokeRequest(
+                        appClipClientId,
+                        clientSecret,
+                        refreshToken,
+                        "refresh_token"
+                    )) // Apple 서버에 회원 탈퇴 요청
                 } catch (e: Exception) {
                     // Apple 서버에 회원 탈퇴 요청 실패 시
-                    throw RuntimeException("Failed to revoke apple token")
+                    throw RuntimeException(e.message)
                 }
             }
             else -> {
                 try {
                     val clientSecret = clientSecretGenerator.generate(clientId)
-                    appleClient.revokeAppleToken(
-                        AppleSignInRevokeRequest(
-                            clientId,
-                            clientSecret,
-                            refreshToken,
-                            "refresh_token"
-                        )
-                    ) // Apple 서버에 회원 탈퇴 요청
+                    log.info("finished to generate client secret for app")
+                    val response = appleClient.revokeAppleToken(AppleRevokeRequest(
+                        clientId,
+                        clientSecret,
+                        refreshToken,
+                        "refresh_token"
+                    )) // Apple 서버에 회원 탈퇴 요청
                 } catch (e: Exception) {
                     // Apple 서버에 회원 탈퇴 요청 실패 시
-                    throw RuntimeException("Failed to revoke apple token")
+                    throw RuntimeException(e.message)
                 }
             }
         }

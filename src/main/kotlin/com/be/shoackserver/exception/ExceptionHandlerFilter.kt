@@ -17,10 +17,10 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.log
 
-@Log4j2
+
 class ExceptionHandlerFilter : OncePerRequestFilter() {
     private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-    private val logger: Logger = LogManager.getLogger(ExceptionController::class.java)
+    private val log: Logger = LogManager.getLogger(ExceptionController::class.java)
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -40,7 +40,7 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
                 request.requestURI
             )
 
-            logger.error("HttpRequestMethodNotSupportedException: ${errorDetails.message}")
+            log.error("HttpRequestMethodNotSupportedException: $errorDetails")
 
             response.status = HttpStatus.METHOD_NOT_ALLOWED.value()
             response.contentType = "application/json"
@@ -57,7 +57,7 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
                 request.requestURI
             )
 
-            logger.error("IllegalArgumentException: ${errorDetails.message}")
+            log.error("IllegalArgumentException: $errorDetails")
 
             response.status = HttpStatus.BAD_REQUEST.value()
             response.contentType = "application/json"
@@ -73,7 +73,7 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
                 request.requestURI
             )
 
-            logger.error("ExpiredJwtException: ${errorDetails.message}")
+            log.error("ExpiredJwtException: $errorDetails")
 
             response.status = HttpStatus.UNAUTHORIZED.value()
             response.contentType = "application/json"
@@ -89,7 +89,7 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
                 request.requestURI
             )
 
-            logger.error("SignatureException: ${errorDetails.message}")
+            log.error("SignatureException: $errorDetails")
 
             response.status = HttpStatus.UNAUTHORIZED.value()
             response.contentType = "application/json"
@@ -106,7 +106,7 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
                 request.requestURI
             )
 
-            logger.error("JwtException: ${errorDetails.message}")
+            log.error("JwtException: $errorDetails")
 
             response.status = HttpStatus.UNAUTHORIZED.value()
             response.contentType = "application/json"
@@ -122,7 +122,7 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
                 request.requestURI
             )
 
-            logger.error("AccessDeniedException: ${errorDetails.message}")
+            log.error("AccessDeniedException: $errorDetails")
 
             response.status = HttpStatus.FORBIDDEN.value()
             response.contentType = "application/json"
@@ -138,7 +138,7 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
                 request.requestURI
             )
 
-            logger.error("Exception: ${errorDetails.message}")
+            log.error("Exception: $errorDetails")
 
             response.status = HttpStatus.INTERNAL_SERVER_ERROR.value()
             response.contentType = "application/json"

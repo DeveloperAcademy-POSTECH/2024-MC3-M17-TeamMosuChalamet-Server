@@ -1,6 +1,5 @@
 package com.be.shoackserver.appleSignin
 
-import lombok.Data
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,7 +15,7 @@ interface AppleAuthClient {
     fun getAppleTokens(appleTokenRequest: AppleTokenRequest) : ResponseEntity<AppleTokenResponse>
 
     @PostMapping("/revoke", consumes = ["application/x-www-form-urlencoded"])
-    fun revokeAppleToken(appleSignInRevokeRequest: AppleSignInRevokeRequest)
+    fun revokeAppleToken(appleRevokeRequest: AppleRevokeRequest)
 }
 
 data class AppleTokenRequest(
@@ -34,9 +33,9 @@ data class AppleTokenResponse(
     val token_type: String
 )
 
-data class AppleSignInRevokeRequest(
-    val client_id: String,
-    val client_secret: String,
-    val token: String,
-    val token_type_hint: String
+data class AppleRevokeRequest(
+    var client_id: String,
+    var client_secret: String,
+    var token: String,
+    var token_type_hint: String
 )

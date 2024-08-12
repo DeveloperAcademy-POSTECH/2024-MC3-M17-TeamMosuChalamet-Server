@@ -24,7 +24,7 @@ class JWTFilter(private val jwtUtil: JWTUtil) : OncePerRequestFilter() {
             else -> {
                 val accessToken = authorizationHeader.split(" ")[1]
                 if (jwtUtil.isExpired(accessToken)) {
-                    throw JwtException("Token is expired")
+                    throw JwtException("Access token expired")
                 }
 
                 val category = jwtUtil.getCategory(accessToken)

@@ -1,7 +1,6 @@
 package com.be.shoackserver.jwt
 
 import io.jsonwebtoken.Jwts
-import lombok.extern.log4j.Log4j2
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets
@@ -9,7 +8,6 @@ import java.util.*
 import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 
-@Log4j2
 @Component
 class JWTUtil(@Value("\${jwt.secret}") secret: String) {
     private val secretKey: SecretKey = SecretKeySpec(secret.toByteArray(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().algorithm)

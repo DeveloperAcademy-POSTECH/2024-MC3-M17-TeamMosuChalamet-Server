@@ -30,7 +30,7 @@ class ApnsConfig(
         val signingKey = ApnsSigningKey.loadFromInputStream(keyInputStream, teamId, keyId)
 
         return ApnsClientBuilder()
-            .setApnsServer(ApnsClientBuilder.DEVELOPMENT_APNS_HOST)
+            .setApnsServer(ApnsClientBuilder.PRODUCTION_APNS_HOST)
             .setSigningKey(signingKey)
             .build()
     }

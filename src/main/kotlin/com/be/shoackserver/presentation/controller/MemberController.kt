@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
-@Log4j2
 @RestController
 @RequestMapping("/api")
 class MemberController(
@@ -48,7 +47,6 @@ class MemberController(
 
     @DeleteMapping("/member")
     fun deleteMember(request: HttpServletRequest) : ResponseEntity<Void> {
-
         val userAgentHeader = request.getHeader("User-Agent") ?: throw IllegalArgumentException("User-Agent is null")
         val userAgent = userAgentHeader.contains("AppClip").let { if (it) "appClip" else "app" }
 

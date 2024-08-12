@@ -59,8 +59,6 @@ class LoginFilter(
 
         response.status = 200
         response.contentType = "application/json"
-
-        println("success")
     }
 
     override fun unsuccessfulAuthentication(request: HttpServletRequest, response: HttpServletResponse, failed: AuthenticationException) {

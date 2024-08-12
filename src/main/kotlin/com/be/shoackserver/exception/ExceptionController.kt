@@ -1,7 +1,6 @@
 package com.be.shoackserver.exception
 
 import jakarta.servlet.http.HttpServletRequest
-import lombok.extern.log4j.Log4j2
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.springframework.http.HttpStatus
@@ -14,11 +13,11 @@ import org.springframework.web.servlet.NoHandlerFoundException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-@Log4j2
+
 @ControllerAdvice
 class ExceptionController {
     private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-    private val logger: Logger = LogManager.getLogger(ExceptionController::class.java)
+    private val log: Logger = LogManager.getLogger(ExceptionController::class.java)
 
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArgumentException(e: IllegalArgumentException, request: HttpServletRequest) : ResponseEntity<ErrorResponse> {
@@ -31,7 +30,7 @@ class ExceptionController {
             request.requestURI
         )
 
-        logger.error("IllegalArgumentException: ${errorDetail.message}")
+        log.error("IllegalArgumentException: $errorDetail")
 
         return ResponseEntity(errorDetail, HttpStatus.BAD_REQUEST)
     }
@@ -47,7 +46,7 @@ class ExceptionController {
             request.requestURI
         )
 
-        logger.error("AccessDeniedException: ${errorDetail.message}")
+        log.error("AccessDeniedException: $errorDetail")
 
         return ResponseEntity(errorDetail, HttpStatus.FORBIDDEN)
     }
@@ -63,7 +62,7 @@ class ExceptionController {
             request.requestURI
         )
 
-        logger.error("RuntimeException: ${errorDetail.message}")
+        log.error("RuntimeException: $errorDetail")
 
         return ResponseEntity(errorDetail, HttpStatus.INTERNAL_SERVER_ERROR)
     }
@@ -79,7 +78,7 @@ class ExceptionController {
             request.requestURI
         )
 
-        logger.error("NoHandlerFoundException: ${errorDetail.message}")
+        log.error("NoHandlerFoundException: $errorDetail")
 
         return ResponseEntity(errorDetail, HttpStatus.NOT_FOUND)
     }
@@ -95,7 +94,7 @@ class ExceptionController {
             request.requestURI
         )
 
-        logger.error("HttpRequestMethodNotSupportedException: ${errorDetail.message}")
+        log.error("HttpRequestMethodNotSupportedException: $errorDetail")
 
         return ResponseEntity(errorDetail, HttpStatus.METHOD_NOT_ALLOWED)
     }
@@ -111,7 +110,7 @@ class ExceptionController {
             request.requestURI
         )
 
-        logger.error("Exception: ${errorDetail.message}")
+        log.error("Exception: $errorDetail")
 
         return ResponseEntity(errorDetail, HttpStatus.INTERNAL_SERVER_ERROR)
     }

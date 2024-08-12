@@ -51,7 +51,9 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-config-server")
     implementation("org.springframework.cloud:spring-cloud-starter-config")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-    implementation("io.jsonwebtoken:jjwt:0.12.3")
+    implementation("io.jsonwebtoken:jjwt-api:0.12.3")
+    implementation("io.jsonwebtoken:jjwt-impl:0.12.3")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.12.3")
     // https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk15on
     implementation("org.bouncycastle:bcpkix-jdk15on:1.70")
 
@@ -61,7 +63,6 @@ dependencies {
 
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-gson:0.12.3")
     runtimeOnly("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.6.3")
     runtimeOnly("com.h2database:h2")
