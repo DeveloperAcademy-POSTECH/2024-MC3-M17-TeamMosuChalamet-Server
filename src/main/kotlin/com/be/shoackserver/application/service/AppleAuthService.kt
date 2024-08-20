@@ -28,7 +28,6 @@ class AppleAuthService(
                 val appleTokenRequest = AppleTokenRequest(clientId, clientSecret, authorizationCode, "authorization_code")
                 val appleTokenResponse = appleClient.getAppleTokens(appleTokenRequest)
                 return appleTokenResponse.body ?: throw RuntimeException("Failed to get apple tokens")
-
             }
         }
     }

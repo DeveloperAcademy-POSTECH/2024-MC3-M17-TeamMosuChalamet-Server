@@ -27,7 +27,7 @@ class MessageUseCase(
         memberDto.imageName = memberDto.imageName?.let {imageService.generateS3URL("profile", it)}
         val destinationDeviceToken = memberService.findDeviceTokenByMemberId(destinationMemberId)
         val destinationMemberDto = MemberDto.of(memberService.findMemberById(destinationMemberId))
-        val userAgent =destinationMemberDto.userAgent
+        val userAgent = destinationMemberDto.userAgent
         when (userAgent) {
             "appClip" -> {
                 messageService.sendPushNotification(memberDto, destinationDeviceToken, appClipClientId)
@@ -36,6 +36,5 @@ class MessageUseCase(
                 messageService.sendPushNotification(memberDto, destinationDeviceToken, clientId)
             }
         }
-
     }
 }
