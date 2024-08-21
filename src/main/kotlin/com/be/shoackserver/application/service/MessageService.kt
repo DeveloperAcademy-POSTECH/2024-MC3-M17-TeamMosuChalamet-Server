@@ -59,15 +59,25 @@ class MessageService(
                     log.info("response: " + response.pushNotification)
                     log.info("Push notification accepted by APNs gateway")
                     log.info("Message : ${response.pushNotification.payload}")
+
+                    println("response: " + response.pushNotification)
+                    println("Push notification accepted by APNs gateway")
+                    println("Message : ${response.pushNotification.payload}")
                 } else {
                     log.error("response: " + response.pushNotification)
                     log.error(
                         "Notification is rejected : " +
                                 response.rejectionReason
                     )
+                    println("response: " + response.pushNotification)
+                    println(
+                        "Notification is rejected : " +
+                                response.rejectionReason
+                    )
                 }
             }
         }
+
 
     }
 }

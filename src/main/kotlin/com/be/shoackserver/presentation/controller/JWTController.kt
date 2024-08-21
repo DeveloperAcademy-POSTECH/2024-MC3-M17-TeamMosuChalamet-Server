@@ -4,6 +4,7 @@ import com.be.shoackserver.application.service.AuthenticationService
 import com.be.shoackserver.application.usecase.MemberManageUseCase
 import com.be.shoackserver.domain.repository.RefreshRepository
 import com.be.shoackserver.jwt.JWTUtil
+import io.jsonwebtoken.JwtException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.ResponseEntity
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController
 class JWTController(
     private val jwtUtil: JWTUtil,
     private val refreshRepository: RefreshRepository,
-    private val authenticationService: AuthenticationService,
     private val memberManageUseCase: MemberManageUseCase
 ) {
 
@@ -38,7 +38,7 @@ class JWTController(
                 try {
                     jwtUtil.isExpired(refreshToken)
                 } catch (e: Exception) {
-                    throw IllegalArgumentException("Refresh token is expired")
+                    throw JwtException("Refresh token is expired")
                 }
 
                 val category = jwtUtil.getCategory(refreshToken)
@@ -49,7 +49,7 @@ class JWTController(
                 }
 
                 if(refreshRepository.findByRefreshToken(refreshToken) == null) {
-                    throw IllegalArgumentException("Invalid refresh token")
+                    throw JwtException("Invalid refresh token")
                 }
 
                 refreshRepository.deleteByRefreshToken(refreshToken)

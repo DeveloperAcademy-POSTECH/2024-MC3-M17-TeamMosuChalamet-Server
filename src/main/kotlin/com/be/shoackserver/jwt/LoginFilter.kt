@@ -1,6 +1,7 @@
 package com.be.shoackserver.jwt
 
 import com.be.shoackserver.application.dto.CustomUserDetails
+import com.be.shoackserver.application.service.MemberService
 import com.be.shoackserver.application.usecase.LoginUseCase
 import com.be.shoackserver.application.usecase.MemberManageUseCase
 import com.be.shoackserver.domain.entity.RefreshEntity
@@ -22,6 +23,7 @@ class LoginFilter(
     private val jwtUtil: JWTUtil,
     private val loginUseCase: LoginUseCase,
     private val memberManageUseCase: MemberManageUseCase,
+    private val memberService: MemberService
 ) : UsernamePasswordAuthenticationFilter() {
 
     private val ACCESSTOKEN_EXPIRED_MS = 24 * 60 * 60 * 1000L // 1일
@@ -43,13 +45,16 @@ class LoginFilter(
 
     override fun successfulAuthentication(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain, authResult: Authentication) {
         val authorizationCode = request.getHeader("Authorization-Code") ?: throw IllegalArgumentException("Authorization-Code is null")
-
+        val deviceToken = request.getHeader("Device-Token") ?: throw IllegalArgumentException("Device-Token is null")
         val userAgentHeader = request.getHeader("User-Agent") ?: throw IllegalArgumentException("User-Agent is null")
         val userAgent = userAgentHeader.contains("AppClip").let { if (it) "appClip" else "app" }
 
         val customUserDetails = authResult.principal as CustomUserDetails
         val memberId = customUserDetails.username.toLong()
         val role = customUserDetails.authorities.first().authority
+
+        // device token 저장
+        memberService.updateMemberDeviceToken(memberId, deviceToken)
 
         // user agent 저장
         memberManageUseCase.saveUserAgent(memberId, userAgent)
