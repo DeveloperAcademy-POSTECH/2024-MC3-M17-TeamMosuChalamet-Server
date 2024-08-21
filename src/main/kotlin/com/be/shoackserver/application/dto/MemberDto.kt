@@ -4,7 +4,6 @@ import com.be.shoackserver.domain.entity.Member
 
 
 class MemberDto {
-
     var id: Long? = null
     var appleUserId: String? = null
     var name: String? = null
@@ -27,5 +26,27 @@ class MemberDto {
             memberDto.role = member.role
             return memberDto
         }
+    }
+
+    constructor()
+
+    constructor(
+        id: Long?,
+        appleUserId: String?,
+        name: String?,
+        imageName: String?,
+        deviceToken: String?,
+        appleRefreshToken: String?,
+        userAgent: String?,
+        role: String?
+    ) {
+        this.id = id
+        this.appleUserId = appleUserId
+        this.name = name
+        this.imageName = imageName
+        this.deviceToken = deviceToken
+        this.appleRefreshToken = appleRefreshToken
+        this.userAgent = userAgent
+        this.role = role
     }
 }

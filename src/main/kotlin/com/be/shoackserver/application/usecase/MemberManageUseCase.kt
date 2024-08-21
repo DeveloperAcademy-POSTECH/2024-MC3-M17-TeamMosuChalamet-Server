@@ -48,4 +48,12 @@ class MemberManageUseCase(
     fun saveUserAgent(memberId: Long, userAgent: String) {
         memberService.saveUserAgent(memberId, userAgent)
     }
+
+    fun addRefreshToken(refreshToken: String, memberId: Long, expiredMs: Long) {
+        authenticationService.addRefreshEntity(refreshToken, memberId, expiredMs)
+    }
+
+    fun deleteRefreshToken(refreshToken: String) {
+        authenticationService.deleteRefreshEntity(refreshToken)
+    }
 }

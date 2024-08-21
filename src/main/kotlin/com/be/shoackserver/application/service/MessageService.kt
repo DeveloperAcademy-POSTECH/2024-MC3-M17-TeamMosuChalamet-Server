@@ -1,7 +1,6 @@
 package com.be.shoackserver.application.service
 
 import com.be.shoackserver.application.dto.MemberDto
-import com.be.shoackserver.application.usecase.MessageUseCase
 import com.eatthepath.pushy.apns.ApnsClient
 import com.eatthepath.pushy.apns.PushNotificationResponse
 import com.eatthepath.pushy.apns.util.ApnsPayloadBuilder
@@ -9,26 +8,24 @@ import com.eatthepath.pushy.apns.util.SimpleApnsPayloadBuilder
 import com.eatthepath.pushy.apns.util.SimpleApnsPushNotification
 import com.eatthepath.pushy.apns.util.TokenUtil
 import com.eatthepath.pushy.apns.util.concurrent.PushNotificationFuture
-import com.fasterxml.jackson.databind.util.JSONPObject
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-
-import java.util.concurrent.ExecutionException
-
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 @Service
 class MessageService(
     private val apnsClient: ApnsClient,
     @Value("\${oauth.apple.watch-client-id}") private val watchBundleId: String
 ) {
+
+    private val log : Logger = LogManager.getLogger(MessageService::class.java)
+
     fun sendPushNotification(
         memberDto: MemberDto,
         destinationDeviceToken: String,
         topic: String
     ) {
-
         // SimpleApnsPayloadBuilder를 사용하여 Gson or Jackson 기반으로 payload 생성
         val payloadBuilder: ApnsPayloadBuilder = SimpleApnsPayloadBuilder()
         payloadBuilder.setAlertTitle(memberDto.name) // 송신자의 이름
@@ -54,16 +51,25 @@ class MessageService(
 
         sendNotificationFuture.whenComplete {response, throwable ->
             if (throwable != null) {
-                System.err.println("Failed to send push notification.")
+                log.error("Failed to send push notification")
                 throwable.printStackTrace()
             }
             else {
                 if (response.isAccepted) {
-                    println(response.pushNotification)
-                    println("Push notification accepted by APNs gateway.")
+                    log.info("response: " + response.pushNotification)
+                    log.info("Push notification accepted by APNs gateway")
+                    log.info("Message : ${response.pushNotification.payload}")
+
+                    println("response: " + response.pushNotification)
+                    println("Push notification accepted by APNs gateway")
                     println("Message : ${response.pushNotification.payload}")
                 } else {
-                    println(response.pushNotification)
+                    log.error("response: " + response.pushNotification)
+                    log.error(
+                        "Notification is rejected : " +
+                                response.rejectionReason
+                    )
+                    println("response: " + response.pushNotification)
                     println(
                         "Notification is rejected : " +
                                 response.rejectionReason
@@ -71,6 +77,7 @@ class MessageService(
                 }
             }
         }
+
 
     }
 }

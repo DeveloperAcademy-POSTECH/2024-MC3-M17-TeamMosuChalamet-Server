@@ -7,7 +7,6 @@ import com.be.shoackserver.presentation.request.DeviceTokenRequest
 import com.be.shoackserver.presentation.request.ProfileNameRequest
 import com.be.shoackserver.presentation.response.ProfileResponse
 import jakarta.servlet.http.HttpServletRequest
-import lombok.extern.log4j.Log4j2
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -49,7 +48,6 @@ class MemberController(
     fun deleteMember(request: HttpServletRequest) : ResponseEntity<Void> {
         val userAgentHeader = request.getHeader("User-Agent") ?: throw IllegalArgumentException("User-Agent is null")
         val userAgent = userAgentHeader.contains("AppClip").let { if (it) "appClip" else "app" }
-
         memberManageUseCase.deleteMember(userAgent)
         return ResponseEntity.ok().build()
     }

@@ -1,5 +1,6 @@
 package com.be.shoackserver.exception
 
+import io.jsonwebtoken.JwtException
 import jakarta.servlet.http.HttpServletRequest
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -99,6 +100,22 @@ class ExceptionController {
         return ResponseEntity(errorDetail, HttpStatus.METHOD_NOT_ALLOWED)
     }
 
+    @ExceptionHandler(JwtException::class)
+    fun handleJwtException(e: JwtException, request: HttpServletRequest) : ResponseEntity<ErrorResponse> {
+        val errorDetail = ErrorResponse(
+            LocalDateTime.now().format(dateFormatter),
+            HttpStatus.UNAUTHORIZED.value(),
+            HttpStatus.UNAUTHORIZED.name,
+            e.stackTraceToString(),
+            e.message ?: "error message not defined",
+            request.requestURI
+        )
+
+        log.error("JwtException: $errorDetail")
+
+        return ResponseEntity(errorDetail, HttpStatus.UNAUTHORIZED)
+    }
+
     @ExceptionHandler(Exception::class)
     fun handleGlobalException(e: Exception, request: HttpServletRequest) : ResponseEntity<ErrorResponse> {
         val errorDetail = ErrorResponse(
@@ -114,6 +131,7 @@ class ExceptionController {
 
         return ResponseEntity(errorDetail, HttpStatus.INTERNAL_SERVER_ERROR)
     }
+
 }
 
 data class ErrorResponse(
