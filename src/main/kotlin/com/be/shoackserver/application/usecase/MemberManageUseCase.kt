@@ -39,7 +39,7 @@ class MemberManageUseCase(
     }
 
     fun deleteMember(userAgent: String) {
-        val memberDto = MemberDto.of(memberService.getMember(getMemberId()))
+        val memberDto = MemberDto.of(memberService.findMemberById(getMemberId()))
         val refreshToken = memberDto.appleRefreshToken ?: throw IllegalArgumentException("refreshToken is null")
         appleAuthService.requestToRevokeAppleToken(refreshToken, userAgent) // Apple 서버에 회원 탈퇴 요청
         memberService.deleteMember(getMemberId()) // DB 에서 회원 삭제

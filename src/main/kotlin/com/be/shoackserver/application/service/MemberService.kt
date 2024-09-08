@@ -10,10 +10,6 @@ import org.springframework.stereotype.Service
 class MemberService (
     private val memberRepository: MemberRepository
 ) {
-    fun getMember(memberId: Long) : Member {
-        return memberRepository.findById(memberId)
-            .orElseThrow() { MemberNotFoundException(memberId) }
-    }
 
     fun findMemberById(memberId: Long) : Member {
         return memberRepository.findById(memberId)

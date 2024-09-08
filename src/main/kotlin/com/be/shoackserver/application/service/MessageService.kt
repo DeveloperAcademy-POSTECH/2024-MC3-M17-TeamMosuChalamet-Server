@@ -51,8 +51,8 @@ class MessageService(
 
         sendNotificationFuture.whenComplete {response, throwable ->
             if (throwable != null) {
-                log.error("Failed to send push notification")
-                throwable.printStackTrace()
+                log.error("Failed to send push notification : ${throwable.message}")
+                throw RuntimeException("Failed to send push notification : ${throwable.message}")
             }
             else {
                 if (response.isAccepted) {
@@ -60,20 +60,13 @@ class MessageService(
                     log.info("Push notification accepted by APNs gateway")
                     log.info("Message : ${response.pushNotification.payload}")
 
-                    println("response: " + response.pushNotification)
-                    println("Push notification accepted by APNs gateway")
-                    println("Message : ${response.pushNotification.payload}")
                 } else {
                     log.error("response: " + response.pushNotification)
                     log.error(
                         "Notification is rejected : " +
                                 response.rejectionReason
                     )
-                    println("response: " + response.pushNotification)
-                    println(
-                        "Notification is rejected : " +
-                                response.rejectionReason
-                    )
+                    throw IllegalArgumentException("Notification is rejected : ${response.rejectionReason}")
                 }
             }
         }
