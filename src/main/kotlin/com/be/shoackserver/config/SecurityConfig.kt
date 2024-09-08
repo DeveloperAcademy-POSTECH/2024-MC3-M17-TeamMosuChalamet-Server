@@ -45,7 +45,7 @@ class SecurityConfig(
             .logout { it.disable() }
             .authorizeRequests { authorize ->
                 authorize
-                    .requestMatchers("/login", "/api/reissue", "/test/**").permitAll()
+                    .requestMatchers("/login", "/api/reissue").permitAll()
                     .requestMatchers("/api/admin").hasRole("ADMIN")
                     .anyRequest().authenticated()
             }
