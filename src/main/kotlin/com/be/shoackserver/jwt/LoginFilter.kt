@@ -89,7 +89,7 @@ class LoginFilter(
         // 애플 인증으로 appleUserId를 받아온다
         val appleUserId = loginUseCase.signIn(identityToken, userAgent)
 
-        val memberDto = memberManageUseCase.addNewMember(appleUserId, "이름 없음", deviceToken)
+        val memberDto = memberManageUseCase.addNewMember(appleUserId, "이름을 입력해주세요", deviceToken)
 
         // user agent 저장
         memberManageUseCase.saveUserAgent(memberDto.id ?: throw IllegalArgumentException("Member id is null"), userAgent)
